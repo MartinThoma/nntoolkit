@@ -98,19 +98,22 @@ def get_model(modelfile):
     return model_yml
 
 
-def show_results(results, translation, n=10):
+def show_results(results, n=10):
     """Show the TOP n results of a classification."""
     # Print headline
-    print("{0:18s} {1:7s}".format("LaTeX Code", "Prob"))
-    print("#"*50)
-    for symbolnr, probability in results:
-        if n == 0:
-            break
-        else:
-            n -= 1
-        print("{0:18s} {1:>7.4f}%".format(translation[symbolnr],
-                                          probability*100))
-    print("#"*50)
+    if len(results) == 0:
+        print("-- No results --")
+    else:
+        print("{0:18s} {1:7s}".format("LaTeX Code", "Prob"))
+        print("#"*50)
+        for entry in results:
+            if n == 0:
+                break
+            else:
+                n -= 1
+            print("{0:18s} {1:>7.4f}%".format(entry['semantics'],
+                                              entry['probability']*100))
+        print("#"*50)
 
 
 def get_model_output(model, x):
@@ -123,32 +126,47 @@ def get_model_output(model, x):
     return x
 
 
-def get_results(model_output):
+def get_results(model_output, output_semantics):
     results = []
     for symbolnr, prob in enumerate(model_output):
-        results.append((symbolnr, prob))
-    results = sorted(results, key=lambda x: x[1], reverse=True)
+        results.append({'symbolnr': symbolnr,
+                        'probability': prob,
+                        'semantics': output_semantics[symbolnr]})
+    results = sorted(results, key=lambda x: x['probability'], reverse=True)
     return results
 
 
-def main(modelfile, inputvec, print_results=True):
+def main(modelfile, features, print_results=True):
+    """Evaluate the model described in ``modelfile`` with ``inputvec`` as
+       input data.
+
+    :param features: List of floats
+    :param print_results: Print results if True. Always return results.
+    :returns: List of possible answers, reverse-sorted by probability.
+    """
+    model = get_model(modelfile)
+    if not model:
+        return []
+    x = numpy.array([features])
+    model_output = get_model_output(model, x)
+    results = get_results(model_output, model['outputs'])
+
+    if print_results:
+        show_results(results, n=10)
+    return results
+
+
+def main_bash(modelfile, inputvec, print_results=True):
     """Evaluate the model described in ``modelfile`` with ``inputvec`` as
        input data.
 
     :param inputvec: List with one list as element. This list contains floats.
     :param print_results: Print results if True. Always return results.
     """
-    model = get_model(modelfile)
     features = json.load(open(inputvec))
-    x = numpy.array(features)
-    model_output = get_model_output(model, x)
-    results = get_results(model_output)
-
-    if print_results:
-        show_results(results, model['outputs'], n=10)
-    return results
+    return main(modelfile, features, print_results)
 
 
 if __name__ == '__main__':
     args = get_parser().parse_args()
-    main(args.modelfile, args.inputvec)
+    main_bash(args.modelfile, args.inputvec)
