@@ -34,13 +34,16 @@ def get_parser():
     subparsers = parser.add_subparsers(dest='cmd')
     subparsers.add_parser('evaluate',
                           add_help=False,
+                          parents=[evaluate.get_parser()],
                           help="Evaluate the model for a single recording.")
     return parser
 
 
 def main(args):
     if args.cmd == 'evaluate':
-        evaluate.main(args.model, args.input)
+        evaluate.main(args.modelfile, args.inputvec)
+    else:
+        logging.warning("Subcommand '%s' not implemented.", args.cmds)
 
 if __name__ == '__main__':
     args = get_parser().parse_args()
