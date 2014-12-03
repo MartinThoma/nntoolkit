@@ -54,6 +54,15 @@ docs/_build/
 target/
 
 
+# Coveralls
+.coveralls.yml
+
+# Nosetests
+cover/
+
+# aspell
+*.bak
+
 *.hdf5
 *.csv
 *.json
