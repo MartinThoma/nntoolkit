@@ -12,6 +12,8 @@ import math
 import numpy
 import json
 import csv
+import tempfile
+import shutil
 
 # nntoolkit modules
 import nntoolkit.utils as utils
@@ -66,17 +68,19 @@ def get_model(modelfile):
     if 'output_semantics.csv' not in filenames:
         logging.error("'%s' does not have an output_semantics.csv.", modelfile)
         return False
-    tar.extractall()
-    model_yml = yaml.load(open('model.yml'))
+    tarfolder = tempfile.mkdtemp()
+    tar.extractall(path=tarfolder)
+    tar.close()
+    model_yml = yaml.load(open(os.path.join(tarfolder, 'model.yml')))
     if model_yml['type'] == 'mlp':
         layers = []
         for layer in model_yml['layers']:
             layertmp = {}
 
-            f = h5py.File(layer['b']['filename'], 'r')
+            f = h5py.File(os.path.join(tarfolder, layer['b']['filename']), 'r')
             layertmp['b'] = f[layer['b']['filename']].value
 
-            f = h5py.File(layer['W']['filename'], 'r')
+            f = h5py.File(os.path.join(tarfolder, layer['W']['filename']), 'r')
             layertmp['W'] = f[layer['W']['filename']].value
 
             layertmp['activation'] = get_activation(layer['activation'])
@@ -84,36 +88,44 @@ def get_model(modelfile):
             layers.append(layertmp)
     model_yml['layers'] = layers
     inputs = {}
-    with open('input_semantics.csv', 'rb') as csvfile:
+    with open(os.path.join(tarfolder, 'input_semantics.csv'), 'rb') as csvfile:
         spamreader = csv.reader(csvfile, delimiter=' ', quotechar='|')
         for i, row in enumerate(spamreader):
             inputs[i] = row[0]
     outputs = {}
-    with open('output_semantics.csv', 'rb') as csvfile:
+    output_file = os.path.join(tarfolder, 'output_semantics.csv')
+    with open(output_file, 'rb') as csvfile:
         spamreader = csv.reader(csvfile, delimiter=' ', quotechar='|')
         for i, row in enumerate(spamreader):
             outputs[i] = row[0]
     model_yml['inputs'] = inputs
     model_yml['outputs'] = outputs
+
+    # Cleanup
+    shutil.rmtree(tarfolder)
     return model_yml
 
 
-def show_results(results, n=10):
+def show_results(results, n=10, print_results=True):
     """Show the TOP n results of a classification."""
     # Print headline
+    s = ""
     if len(results) == 0:
-        print("-- No results --")
+        s += "-- No results --"
     else:
-        print("{0:18s} {1:7s}".format("LaTeX Code", "Prob"))
-        print("#"*50)
+        s += "{0:18s} {1:7s}\n".format("LaTeX Code", "Prob")
+        s += "#"*50 + "\n"
         for entry in results:
             if n == 0:
                 break
             else:
                 n -= 1
-            print("{0:18s} {1:>7.4f}%".format(entry['semantics'],
-                                              entry['probability']*100))
-        print("#"*50)
+            s += "{0:18s} {1:>7.4f}%\n".format(entry['semantics'],
+                                               entry['probability']*100)
+        s += "#"*50
+    if print_results:
+        print(s)
+    return s
 
 
 def get_model_output(model, x):
