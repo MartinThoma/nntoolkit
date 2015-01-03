@@ -14,6 +14,12 @@ import json
 import csv
 import tempfile
 import shutil
+import sys
+
+PY3 = sys.version > '3'
+
+if not PY3:
+    from future.builtins import open
 
 # nntoolkit modules
 import nntoolkit.utils as utils
@@ -47,6 +53,17 @@ def get_activation(activation_str):
         return sigmoid
     elif activation_str == 'softmax':
         return lambda x: numpy.divide(numpy.exp(x), numpy.sum(numpy.exp(x)))
+
+
+def get_outputs(output_file):
+    outputs = {}
+    mode = 'rt'
+    arguments = {'newline': '', 'encoding': 'utf8'}
+    with open(output_file, mode, **arguments) as csvfile:
+        spamreader = csv.reader(csvfile, delimiter=' ', quotechar='|')
+        for i, row in enumerate(spamreader):
+            outputs[i] = row[0]
+    return outputs
 
 
 def get_model(modelfile):
@@ -88,16 +105,20 @@ def get_model(modelfile):
             layers.append(layertmp)
     model_yml['layers'] = layers
     inputs = {}
-    with open(os.path.join(tarfolder, 'input_semantics.csv'), 'rb') as csvfile:
+
+    # if sys.version_info.major < 3:
+    #     mode = 'rb'
+    #     arguments = {}
+    # else:
+    mode = 'rt'
+    arguments = {'newline': '', 'encoding': 'utf8'}
+
+    input_semantics_file = os.path.join(tarfolder, 'input_semantics.csv')
+    with open(input_semantics_file, mode, **arguments) as csvfile:
         spamreader = csv.reader(csvfile, delimiter=' ', quotechar='|')
         for i, row in enumerate(spamreader):
             inputs[i] = row[0]
-    outputs = {}
-    output_file = os.path.join(tarfolder, 'output_semantics.csv')
-    with open(output_file, 'rb') as csvfile:
-        spamreader = csv.reader(csvfile, delimiter=' ', quotechar='|')
-        for i, row in enumerate(spamreader):
-            outputs[i] = row[0]
+    outputs = get_outputs(os.path.join(tarfolder, 'output_semantics.csv'))
     model_yml['inputs'] = inputs
     model_yml['outputs'] = outputs
 

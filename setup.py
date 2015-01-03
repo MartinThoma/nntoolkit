@@ -5,7 +5,7 @@ except ImportError:
 
 config = {
     'name': 'nntoolkit',
-    'version': '0.1.17',
+    'version': '0.1.24',
     'author': 'Martin Thoma',
     'author_email': 'info@martin-thoma.de',
     'packages': ['nntoolkit'],
