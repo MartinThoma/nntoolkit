@@ -6,7 +6,7 @@ import mock
 import os
 import argparse
 
-# hwrt modules
+# nntoolkit modules
 import nntoolkit
 import nntoolkit.utils as utils
 
