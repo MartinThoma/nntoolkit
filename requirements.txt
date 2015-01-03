@@ -1,0 +1,7 @@
+coveralls
+Pillow
+nose
+Sphinx
+coverage
+future
+h5py

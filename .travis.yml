@@ -3,8 +3,7 @@ python:
   - "2.7"
 install: 
   - pip install natsort matplotlib coveralls
-  - pip install shapely
-  - pip install mysql-python
+  - pip install h5py
 script:
   - nosetests --with-coverage
 virtualenv:
@@ -12,6 +11,7 @@ virtualenv:
 before_install:
   - sudo apt-get install libblas-dev liblapack-dev gfortran
   - sudo apt-get install python-scipy python-numpy
+  - sudo apt-get install -qq libhdf5-serial-dev
 script:
   - nosetests --with-cov --cover-package nntoolkit --logging-level=INFO
 after_success:

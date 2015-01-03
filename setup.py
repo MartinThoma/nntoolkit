@@ -22,7 +22,8 @@ config = {
         "nose",
         "natsort",
         "PyYAML",
-        "matplotlib"
+        "matplotlib",
+        "h5py"
     ],
     'keywords': ['Neural Networks', 'Feed-Forward', 'NN', 'MLP'],
     'download_url': 'https://github.com/MartinThoma/nntoolkit',
