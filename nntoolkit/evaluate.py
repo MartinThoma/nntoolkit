@@ -67,7 +67,12 @@ def get_outputs(output_file):
 
 
 def get_model(modelfile):
-    """Check if ``modelfile`` is valid."""
+    """Check if ``modelfile`` is valid.
+    :param modelfile: path to a model.tar file which describes a neural
+        network.
+    :returns: A dictionary which describes the model if everything seems to be
+        fine. Return ``False`` if errors occur.
+    """
     if not os.path.isfile(modelfile):
         logging.error("File '%s' does not exist.", modelfile)
         return False
@@ -189,14 +194,15 @@ def main(modelfile, features, print_results=True):
     return results
 
 
-def main_bash(modelfile, inputvec, print_results=True):
-    """Evaluate the model described in ``modelfile`` with ``inputvec`` as
+def main_bash(modelfile, inputvec_file, print_results=True):
+    """Evaluate the model described in ``modelfile`` with ``inputvec_file`` as
        input data.
 
-    :param inputvec: List with one list as element. This list contains floats.
+    :param inputvec_file: File with json content. The content is a list with
+        one list as element. This list contains floats.
     :param print_results: Print results if True. Always return results.
     """
-    features = json.load(open(inputvec))
+    features = json.load(open(inputvec_file))
     return main(modelfile, features, print_results)
 
 
