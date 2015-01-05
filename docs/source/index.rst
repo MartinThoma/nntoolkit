@@ -11,6 +11,12 @@ Contents:
 .. toctree::
    :maxdepth: 2
 
+   installation
+   mlps
+   model-format
+   create
+   evaluate
+
 
 
 Indices and tables
