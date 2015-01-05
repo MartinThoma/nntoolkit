@@ -1,17 +1,18 @@
 language: python
 python:
-  - "2.7"
+  - 2.7
+  - 3.3
+  - 3.4
 install: 
   - pip install natsort matplotlib coveralls
   - pip install future
   - pip install h5py
 script:
   - nosetests --with-coverage
-virtualenv:
-  system_site_packages: true
 before_install:
   - sudo apt-get install libblas-dev liblapack-dev gfortran
   - sudo apt-get install python-scipy python-numpy
+  - sudo apt-get update -qq
   - sudo apt-get install -qq libhdf5-serial-dev
 script:
   - nosetests --with-cov --cover-package nntoolkit --logging-level=INFO
