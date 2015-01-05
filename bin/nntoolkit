@@ -3,8 +3,6 @@
 
 """nntoolkit, the neural network toolkit, is a set of executable scripts
    and Python modules that are useful for neural network evaluation.
-
-   Current scripts include: run.py.
 """
 
 
@@ -17,11 +15,12 @@ logging.basicConfig(format='%(asctime)s %(levelname)s %(message)s',
                     stream=sys.stdout)
 
 # hwrt modules
-# Every HWR tool that should be available through
-#   hwrt TOOL
+# Every nntoolkit subcommand that should be available through
+#   nntoolkit SUBCOMMAND
 # has to be added to ``get_parser()`` and to ``main``.
 import nntoolkit
 from nntoolkit import evaluate
+from nntoolkit import create
 
 
 def get_parser():
@@ -36,12 +35,18 @@ def get_parser():
                           add_help=False,
                           parents=[evaluate.get_parser()],
                           help="Evaluate the model for a single recording.")
+    subparsers.add_parser('create',
+                          add_help=False,
+                          parents=[create.get_parser()],
+                          help="Create a new model file.")
     return parser
 
 
 def main(args):
     if args.cmd == 'evaluate':
         evaluate.main(args.modelfile, args.inputvec)
+    elif args.cmd == 'create':
+        create.main(args.type, args.architecture)
     else:
         logging.warning("Subcommand '%s' not implemented.", args.cmds)
 
