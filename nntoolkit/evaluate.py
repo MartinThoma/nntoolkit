@@ -16,6 +16,10 @@ import tempfile
 import shutil
 import sys
 
+import theano
+import theano.tensor as T
+
+
 PY3 = sys.version > '3'
 
 if not PY3:
@@ -154,12 +158,20 @@ def show_results(results, n=10, print_results=True):
     return s
 
 
+
 def get_model_output(model, x):
     if model['type'] == 'mlp':
         for layer in model['layers']:
             b, W, activation = layer['b'], layer['W'], layer['activation']
-            x = numpy.dot(x, W)
-            x = activation(x + b)
+            W_s = theano.shared(value=W,name='W',borrow=True)
+            B_s = theano.shared(value=b,name='b',borrow=True)
+            X_s = theano.shared(value=x,name='x',borrow=True)
+            
+            X_s=T.dot(X_s,W_s)
+
+            x= T.add(X_s, B_s).eval()
+
+            x = activation(x)
         x = x[0]
     return x
 
