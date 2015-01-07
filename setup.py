@@ -17,16 +17,14 @@ class build_ext(_build_ext):
 
 
 config = {
-'cmdclass':{'build_txt':build_ext}, #numpy hack
-'setup_requires':['numpy'],         #numpy hack
-
+    'cmdclass': {'build_txt': build_ext},  # numpy hack
+    'setup_requires': ['numpy'],           # numpy hack
     'name': 'nntoolkit',
     'version': '0.1.25',
     'author': 'Martin Thoma',
     'author_email': 'info@martin-thoma.de',
     'packages': ['nntoolkit'],
     'scripts': ['bin/nntoolkit'],
-    # 'package_data': {'nntoolkit': ['templates/*', 'misc/*']},
     'url': 'https://github.com/MartinThoma/nntoolkit',
     'license': 'MIT',
     'description': 'Neural Network Toolkit',
@@ -53,6 +51,8 @@ config = {
                     'Natural Language :: English',
                     'Programming Language :: Python :: 2.7',
                     'Programming Language :: Python :: 3',
+                    'Programming Language :: Python :: 3.3',
+                    'Programming Language :: Python :: 3.4',
                     'Topic :: Scientific/Engineering :: Artificial Intelligence',
                     'Topic :: Software Development',
                     'Topic :: Utilities'],
