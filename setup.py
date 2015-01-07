@@ -7,7 +7,7 @@ except ImportError:
 
 
 class build_ext(_build_ext):
-    'hack: http://stackoverflow.com/a/21621689/1831520'
+    'to install numpy'
     def finalize_options(self):
         _build_ext.finalize_options(self)
         # Prevent numpy from thinking it is still in its setup process:
