@@ -1,9 +1,25 @@
+from setuptools.command.build_ext import build_ext as _build_ext
+
 try:
     from setuptools import setup
 except ImportError:
     from distutils.core import setup
 
+
+class build_ext(_build_ext):
+    'hack: http://stackoverflow.com/a/21621689/1831520'
+    def finalize_options(self):
+        _build_ext.finalize_options(self)
+        # Prevent numpy from thinking it is still in its setup process:
+        __builtins__.__NUMPY_SETUP__ = False
+        import numpy
+        self.include_dirs.append(numpy.get_include())
+
+
 config = {
+'cmdclass':{'build_txt':build_ext}, #numpy hack
+'setup_requires':['numpy'],         #numpy hack
+
     'name': 'nntoolkit',
     'version': '0.1.25',
     'author': 'Martin Thoma',
@@ -23,7 +39,9 @@ config = {
         "natsort",
         "PyYAML",
         "matplotlib",
-        "h5py"
+        "h5py",
+        "numpy",
+        "Cython"
     ],
     'keywords': ['Neural Networks', 'Feed-Forward', 'NN', 'MLP'],
     'download_url': 'https://github.com/MartinThoma/nntoolkit',
