@@ -36,7 +36,6 @@ config = {
         "nose",
         "natsort",
         "PyYAML",
-        "matplotlib",
         "h5py",
         "numpy",
         "Cython"
