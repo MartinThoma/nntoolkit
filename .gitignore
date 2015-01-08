@@ -63,7 +63,9 @@ cover/
 # aspell
 *.bak
 
+# Prevent accidential uploads - some might sometimes be added
 *.hdf5
 *.csv
 *.json
 *.yml
+*.tar
