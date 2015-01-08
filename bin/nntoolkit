@@ -53,7 +53,10 @@ def main(args):
     elif args.cmd == 'create':
         create.main(args.type, args.architecture)
     elif args.cmd == 'train':
-        train.main(args.model_file, args.training_data)
+        train.main(args.model_file,
+                   args.training_data,
+                   args.batch_size,
+                   args.learning_rate)
     else:
         logging.warning("Subcommand '%s' not implemented.", args.cmds)
 
