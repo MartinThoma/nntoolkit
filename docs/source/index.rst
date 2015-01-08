@@ -15,6 +15,7 @@ Contents:
    mlps
    model-format
    create
+   train
    evaluate
 
 

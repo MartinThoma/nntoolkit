@@ -21,6 +21,7 @@ logging.basicConfig(format='%(asctime)s %(levelname)s %(message)s',
 import nntoolkit
 from nntoolkit import evaluate
 from nntoolkit import create
+from nntoolkit import train
 
 
 def get_parser():
@@ -39,6 +40,10 @@ def get_parser():
                           add_help=False,
                           parents=[create.get_parser()],
                           help="Create a new model file.")
+    subparsers.add_parser('train',
+                          add_help=False,
+                          parents=[train.get_parser()],
+                          help="Train a neural network.")
     return parser
 
 
@@ -47,6 +52,8 @@ def main(args):
         evaluate.main(args.modelfile, args.inputvec)
     elif args.cmd == 'create':
         create.main(args.type, args.architecture)
+    elif args.cmd == 'train':
+        train.main(args.model_file, args.training_data)
     else:
         logging.warning("Subcommand '%s' not implemented.", args.cmds)
 
