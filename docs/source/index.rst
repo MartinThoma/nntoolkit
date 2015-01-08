@@ -14,6 +14,7 @@ Contents:
    installation
    mlps
    model-format
+   data-format
    create
    train
    evaluate

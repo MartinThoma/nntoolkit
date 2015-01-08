@@ -3,17 +3,8 @@
 
 """Evaluate a neural network."""
 
-import logging
-import os
-import yaml
-import tarfile
-import h5py
-import math
 import numpy
 import json
-import csv
-import tempfile
-import shutil
 import sys
 
 PY3 = sys.version > '3'
@@ -44,92 +35,6 @@ def get_parser():
                         type=lambda x: utils.is_valid_file(parser, x),
                         required=True)
     return parser
-
-
-def get_activation(activation_str):
-    """Return a function that works on a numpy array."""
-    sigmoid = numpy.vectorize(lambda x: 1./(1+math.exp(-x)))
-    if activation_str == 'sigmoid':
-        return sigmoid
-    elif activation_str == 'softmax':
-        return lambda x: numpy.divide(numpy.exp(x), numpy.sum(numpy.exp(x)))
-
-
-def get_outputs(output_file):
-    outputs = {}
-    mode = 'rt'
-    arguments = {'newline': '', 'encoding': 'utf8'}
-    with open(output_file, mode, **arguments) as csvfile:
-        spamreader = csv.reader(csvfile, delimiter=' ', quotechar='|')
-        for i, row in enumerate(spamreader):
-            outputs[i] = row[0]
-    return outputs
-
-
-def get_model(modelfile):
-    """Check if ``modelfile`` is valid.
-    :param modelfile: path to a model.tar file which describes a neural
-        network.
-    :returns: A dictionary which describes the model if everything seems to be
-        fine. Return ``False`` if errors occur.
-    """
-    if not os.path.isfile(modelfile):
-        logging.error("File '%s' does not exist.", modelfile)
-        return False
-    if not tarfile.is_tarfile(modelfile):
-        logging.error("'%s' is not a valid tar file.", modelfile)
-        return False
-    tar = tarfile.open(modelfile)
-    filenames = tar.getnames()
-    if 'model.yml' not in filenames:
-        logging.error("'%s' does not have a model.yml.", modelfile)
-        return False
-    if 'input_semantics.csv' not in filenames:
-        logging.error("'%s' does not have an input_semantics.csv.", modelfile)
-        return False
-    if 'output_semantics.csv' not in filenames:
-        logging.error("'%s' does not have an output_semantics.csv.", modelfile)
-        return False
-    tarfolder = tempfile.mkdtemp()
-    tar.extractall(path=tarfolder)
-    tar.close()
-    model_yml = yaml.load(open(os.path.join(tarfolder, 'model.yml')))
-    if model_yml['type'] == 'mlp':
-        layers = []
-        for layer in model_yml['layers']:
-            layertmp = {}
-
-            f = h5py.File(os.path.join(tarfolder, layer['b']['filename']), 'r')
-            layertmp['b'] = f[layer['b']['filename']].value
-
-            f = h5py.File(os.path.join(tarfolder, layer['W']['filename']), 'r')
-            layertmp['W'] = f[layer['W']['filename']].value
-
-            layertmp['activation'] = get_activation(layer['activation'])
-
-            layers.append(layertmp)
-    model_yml['layers'] = layers
-    inputs = {}
-
-    # if sys.version_info.major < 3:
-    #     mode = 'rb'
-    #     arguments = {}
-    # else:
-    mode = 'rt'
-    arguments = {'newline': '', 'encoding': 'utf8'}
-
-    input_semantics_file = os.path.join(tarfolder, 'input_semantics.csv')
-    with open(input_semantics_file, mode, **arguments) as csvfile:
-        spamreader = csv.reader(csvfile, delimiter=' ', quotechar='|')
-        for i, row in enumerate(spamreader):
-            inputs[i] = row[0]
-    outputs = get_outputs(os.path.join(tarfolder, 'output_semantics.csv'))
-    model_yml['inputs'] = inputs
-    model_yml['outputs'] = outputs
-
-    # Cleanup
-    shutil.rmtree(tarfolder)
-    return model_yml
 
 
 def show_results(results, n=10, print_results=True):
@@ -182,7 +87,7 @@ def main(modelfile, features, print_results=True):
     :param print_results: Print results if True. Always return results.
     :returns: List of possible answers, reverse-sorted by probability.
     """
-    model = get_model(modelfile)
+    model = utils.get_model(modelfile)
     if not model:
         return []
     x = numpy.array([features])

@@ -6,7 +6,7 @@
 """
 
 
-import argparse
+from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
 
 import logging
 import sys
@@ -26,8 +26,9 @@ from nntoolkit import train
 
 def get_parser():
     """Return the parser object for this script."""
-    parser = argparse.ArgumentParser(description=__doc__,
-                                     prog='nntoolkit')
+    parser = ArgumentParser(description=__doc__,
+                            prog='nntoolkit',
+                            formatter_class=ArgumentDefaultsHelpFormatter)
     parser.add_argument('--version',
                         action='version',
                         version=('nntoolkit %s' % str(nntoolkit.__version__)))
@@ -54,9 +55,11 @@ def main(args):
         create.main(args.type, args.architecture)
     elif args.cmd == 'train':
         train.main(args.model_file,
+                   args.model_output_file,
                    args.training_data,
                    args.batch_size,
-                   args.learning_rate)
+                   args.learning_rate,
+                   args.epochs)
     else:
         logging.warning("Subcommand '%s' not implemented.", args.cmds)
 
