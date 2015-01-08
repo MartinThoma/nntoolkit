@@ -22,28 +22,8 @@ if not PY3:
     from future.builtins import open
 
 # nntoolkit modules
-import nntoolkit.utils as utils
+#import nntoolkit.utils as utils
 
-
-def get_parser():
-    """Return the parser object for this script."""
-    from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
-    parser = ArgumentParser(description=__doc__,
-                            formatter_class=ArgumentDefaultsHelpFormatter)
-    parser.add_argument("-m", "--model",
-                        dest="modelfile",
-                        help="where is the model file (.tar)?",
-                        metavar="FILE",
-                        type=lambda x: utils.is_valid_file(parser, x),
-                        required=True)
-    parser.add_argument("-i", "--input",
-                        dest="inputvec",
-                        help="""a file which contains an input vector
-                               [[0.12, 0.312, 1.21 ...]]""",
-                        metavar="FILE",
-                        type=lambda x: utils.is_valid_file(parser, x),
-                        required=True)
-    return parser
 
 
 def get_activation(activation_str):
@@ -204,8 +184,3 @@ def main_bash(modelfile, inputvec_file, print_results=True):
     """
     features = json.load(open(inputvec_file))
     return main(modelfile, features, print_results)
-
-
-if __name__ == '__main__':
-    args = get_parser().parse_args()
-    main_bash(args.modelfile, args.inputvec)

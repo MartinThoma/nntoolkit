@@ -1,16 +1,33 @@
+from setuptools.command.build_ext import build_ext as _build_ext
+
 try:
     from setuptools import setup
 except ImportError:
     from distutils.core import setup
 
+
+class build_ext(_build_ext):
+    'to install numpy'
+    def finalize_options(self):
+        _build_ext.finalize_options(self)
+        # Prevent numpy from thinking it is still in its setup process:
+        __builtins__.__NUMPY_SETUP__ = False
+        import numpy
+        self.include_dirs.append(numpy.get_include())
+
+
 config = {
+    'cmdclass': {'build_txt': build_ext},  # numpy hack
+    'setup_requires': ['numpy'],           # numpy hack
     'name': 'nntoolkit',
     'version': '0.1.25',
     'author': 'Martin Thoma',
     'author_email': 'info@martin-thoma.de',
     'packages': ['nntoolkit'],
     'scripts': ['bin/nntoolkit'],
-    # 'package_data': {'nntoolkit': ['templates/*', 'misc/*']},
+    'entry_points':{
+          'console_scripts': ['nntoolkit = nntoolkit.nntoolkit:main'],
+      },
     'url': 'https://github.com/MartinThoma/nntoolkit',
     'license': 'MIT',
     'description': 'Neural Network Toolkit',
@@ -22,8 +39,9 @@ config = {
         "nose",
         "natsort",
         "PyYAML",
-        "matplotlib",
-        "h5py"
+        "h5py",
+        "numpy",
+        "Cython"
     ],
     'keywords': ['Neural Networks', 'Feed-Forward', 'NN', 'MLP'],
     'download_url': 'https://github.com/MartinThoma/nntoolkit',
@@ -35,6 +53,8 @@ config = {
                     'Natural Language :: English',
                     'Programming Language :: Python :: 2.7',
                     'Programming Language :: Python :: 3',
+                    'Programming Language :: Python :: 3.3',
+                    'Programming Language :: Python :: 3.4',
                     'Topic :: Scientific/Engineering :: Artificial Intelligence',
                     'Topic :: Software Development',
                     'Topic :: Utilities'],
@@ -43,3 +63,4 @@ config = {
 }
 
 setup(**config)
+
