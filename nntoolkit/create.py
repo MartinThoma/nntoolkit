@@ -19,7 +19,6 @@ def get_parser():
                             formatter_class=ArgumentDefaultsHelpFormatter)
     parser.add_argument("-t", "--type",
                         choices=["mlp"],
-                        nargs=1,
                         default="mlp",
                         dest="type",
                         help="which type of neural network do you want to "

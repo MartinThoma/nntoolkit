@@ -52,7 +52,7 @@ def main(args):
     if args.cmd == 'evaluate':
         evaluate.main(args.modelfile, args.inputvec)
     elif args.cmd == 'create':
-        create.main(args.type, args.architecture)
+        create.main(args.type, args.architecture, args.model_file)
     elif args.cmd == 'train':
         train.main(args.model_file,
                    args.model_output_file,
