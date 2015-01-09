@@ -44,7 +44,7 @@ def show_results(results, n=10, print_results=True):
     if len(results) == 0:
         s += "-- No results --"
     else:
-        s += "{0:18s} {1:7s}\n".format("LaTeX Code", "Prob")
+        s += "{0:18s} {1:7s}\n".format("Class", "Prob")
         s += "#"*50 + "\n"
         for entry in results:
             if n == 0:
