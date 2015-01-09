@@ -137,13 +137,6 @@ def write_model(model, model_file_path):
     """Write ``model`` to ``model_file_path``.
     :returns: False if it failed.
     """
-    if not os.path.isfile(model_file_path):
-        logging.error("File '%s' does not exist.", model_file_path)
-        return False
-    if not tarfile.is_tarfile(model_file_path):
-        logging.error("'%s' is not a valid tar file.", model_file_path)
-        return False
-
     model_yml = {}
     model_yml['type'] = 'mlp'
 
