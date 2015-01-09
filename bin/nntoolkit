@@ -50,7 +50,7 @@ def get_parser():
 
 def main(args):
     if args.cmd == 'evaluate':
-        evaluate.main(args.modelfile, args.inputvec)
+        evaluate.main_bash(args.modelfile, args.inputvec)
     elif args.cmd == 'create':
         create.main(args.type, args.architecture, args.model_file)
     elif args.cmd == 'train':
