@@ -33,11 +33,7 @@ def gradient_descent_2(alpha, x, y, numIterations):
 if __name__ == '__main__':
     x, y = make_regression(n_samples=100, n_features=1, n_informative=1, 
                         random_state=0, noise=10) 
-    #x 100x1
-    #print type(y)
-
-    print x.shape==y.shape
-    #y 100x1
+   
     m, n = np.shape(x)
     x = np.c_[ np.ones(m), x] # insert column
     alpha = 0.01 # learning rate
