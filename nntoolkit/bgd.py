@@ -7,8 +7,8 @@ from theano import tensor as T, function
 
 
 def gradient_descent_2(alpha, x, y, numIterations):
-    m = x.shape[0] # number of samples
-    theta = np.array([[1,1]])
+    m = x.shape[0] 
+    theta = np.array([1,1])
 
 
     T_x,T_y, T_z, T_theta, T_loss = T.dmatrices('x','y','z','theta','loss')
@@ -18,9 +18,10 @@ def gradient_descent_2(alpha, x, y, numIterations):
     find_gradient=function([T_x,T_loss], (T.dot(T_x, T_loss)/m   ) )
     
 
-#    theta=theta.reshape(theta.shape[0],1)
+    theta=theta.reshape(theta.shape[0],1)        #had tough time without this,
+
     for iter in range(0, numIterations):
-        hypothesis =find_hypothesis(x, theta).T #TODO: could not emplement it without reshape
+        hypothesis =find_hypothesis(x, theta).T 
         loss=find_loss(hypothesis, np.array([y]))
         J = find_cost(loss)
         print "iter %s | J: %.3f" % (iter, J)   
@@ -30,8 +31,8 @@ def gradient_descent_2(alpha, x, y, numIterations):
     return theta
 
 if __name__ == '__main__':
-    x, y = make_regression(n_samples=10, n_features=1, n_informative=1, 
-                        random_state=0, noise=0) 
+    x, y = make_regression(n_samples=100, n_features=1, n_informative=1, 
+                        random_state=0, noise=10) 
     #x 100x1
     #print type(y)
 
