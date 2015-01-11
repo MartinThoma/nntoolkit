@@ -57,13 +57,13 @@ def get_outputs(output_file):
     For example, output neuron 1 means class "0" in the MNIST classification
     task.
     """
-    outputs = {}
+    outputs = []
     mode = 'rt'
     arguments = {'newline': '', 'encoding': 'utf8'}
     with open(output_file, mode, **arguments) as csvfile:
         spamreader = csv.reader(csvfile, delimiter=' ', quotechar='|')
-        for i, row in enumerate(spamreader):
-            outputs[i] = row[0]
+        for row in spamreader:
+            outputs.append(row[0])
     return outputs
 
 
@@ -110,7 +110,7 @@ def get_model(modelfile):
 
             layers.append(layertmp)
     model_yml['layers'] = layers
-    inputs = {}
+    inputs = []
 
     # if sys.version_info.major < 3:
     #     mode = 'rb'
@@ -122,8 +122,8 @@ def get_model(modelfile):
     input_semantics_file = os.path.join(tarfolder, 'input_semantics.csv')
     with open(input_semantics_file, mode, **arguments) as csvfile:
         spamreader = csv.reader(csvfile, delimiter="\n", quotechar='"')
-        for i, row in enumerate(spamreader):
-            inputs[i] = row[0]
+        for row in spamreader:
+            inputs.append(row[0])
     outputs = get_outputs(os.path.join(tarfolder, 'output_semantics.csv'))
     model_yml['inputs'] = inputs
     model_yml['outputs'] = outputs
@@ -172,13 +172,15 @@ def write_model(model, model_file_path):
                                           'filename': 'b%i.hdf5' % i},
                                     'activation': 'TODO'})
         # Write HDF5 files
-        Wfile = h5py.File('W%i.hdf5' % layer, 'w')
+        Wfile = h5py.File('W%i.hdf5' % i, 'w')
         Wfile.create_dataset(Wfile.id.name, data=W)
         Wfile.close()
+        filenames.append('W%i.hdf5' % i)
 
-        bfile = h5py.File('b%i.hdf5' % layer, 'w')
+        bfile = h5py.File('b%i.hdf5' % i, 'w')
         bfile.create_dataset(bfile.id.name, data=b)
         bfile.close()
+        filenames.append('b%i.hdf5' % i)
 
     # Create YAML file
     with open("model.yml", 'w') as f:

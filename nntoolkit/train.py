@@ -88,9 +88,12 @@ def minibatch_gradient_descent(model,
 
     params_to_learn = []
     layers_shared = []
-    for layer in model['layers']:
-        W = theano.shared(np.array(layer['W'], dtype=theano.config.floatX))
-        b = theano.shared(np.array(layer['b'], dtype=theano.config.floatX))
+    for i, layer in enumerate(model['layers']):
+        W = np.array(layer['W'], dtype=theano.config.floatX)
+        W = theano.shared(W, name='W%i' % i)
+        b = np.array(layer['b'], dtype=theano.config.floatX)
+        b = b.reshape((1, len(b)))
+        b = theano.shared(b, name='b%i' % i)
         layers_shared.append({'W': W, 'b': b})
         params_to_learn.append(W)
         params_to_learn.append(b)
@@ -102,32 +105,37 @@ def minibatch_gradient_descent(model,
         # TODO: Sigmoid - make dependant from activation function
         hid = tensor.tanh(tensor.dot(last_output, W) + b)
         last_output = hid
-    out = last_output
+    out = tensor.argmax(last_output, axis=1)
 
     # Classification error
-    err = 0.5 * tensor.sum(out - sy) ** 2
+    err = 0.5 * tensor.sum(tensor.neq(out, sy)) ** 2
 
     # Build dictuionary of parameters which get updated
-    u_params_to_learn = {}
-    g_params_to_learn = tensor.grad(err, params_to_learn)
+    u_params_to_learn = []
+    g_params_to_learn = tensor.grad(cost=err, wrt=params_to_learn)
     for param, gparam in zip(params_to_learn, g_params_to_learn):
-        u_params_to_learn[param] = param - lr * gparam
+        u_params_to_learn.append((param, param - lr * gparam))
 
     # compile a fast training function
-    train = theano.function([sx, sy],
-                            err,
-                            updates=u_params_to_learn)
+    train = theano.function(inputs=[sx, sy],
+                            outputs=err,
+                            updates=u_params_to_learn,
+                            allow_input_downcast=True)
 
     # now do the computations
-    trainingloops = epochs * max(1, int(len(x) / batch_size))
+    loops_per_epoch = max(1, int(len(x) / batch_size))
+    logging.debug("Loops per epoch: %i", loops_per_epoch)
+    trainingloops = epochs * loops_per_epoch
     for i in range(trainingloops):
-        print("Epoch %i" % i)
-        x_i = x[i * batch_size: (i + 1) * batch_size]
-        y_i = y[i * batch_size: (i + 1) * batch_size]
-        print(x_i.shape)
-        print(y_i.shape)
+        start = (i * batch_size) % len(x)
+        end = ((i + 1) * batch_size) % len(x)
+        if start > end:
+            continue  # TODO: Eventually we miss training examples!
+        x_i = x[start:end]
+        y_i = y[start:end]
         err_i = train(x_i, y_i)
-        logging.info("Loss %0.2f", err_i)
+        #if i % loops_per_epoch == 0:
+        print("Epoch %i/%i, Loss %0.2f" % (i+1, i / loops_per_epoch, err_i))
 
 
 def get_data(data_file):
@@ -154,9 +162,13 @@ def get_data(data_file):
 
         if 'y.hdf5' in filenames:
             y = h5py.File('y.hdf5', 'r')['y.hdf5'].value
-            y = y.reshape((len(y), 1))
+            y = y.reshape(len(y), 1)
         else:
             y = None
+
+    for filename in filenames:
+        # Cleanup
+        os.remove(filename)
 
     return (x, y)
 
