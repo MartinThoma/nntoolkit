@@ -69,3 +69,4 @@ cover/
 *.json
 *.yml
 *.tar
+*.gz

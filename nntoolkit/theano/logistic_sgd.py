@@ -205,6 +205,16 @@ def load_data(dataset):
     # Load the dataset
     f = gzip.open(dataset, 'rb')
     train_set, valid_set, test_set = cPickle.load(f)
+
+    # Train_set is a tuple (x,y), where x is of shape (50000,784)
+    # Write data to hdf5 file:
+    print("create datasets tar ...")
+    create_dataset_tar('train', train_set)
+    create_dataset_tar('test', test_set)
+    create_dataset_tar('valid', valid_set)
+    print("done")
+
+    print(train_set[0][0].shape)
     f.close()
     #train_set, valid_set, test_set format: tuple(input, target)
     #input is an numpy.ndarray of 2 dimensions (a matrix)
@@ -435,5 +445,23 @@ def sgd_optimization_mnist(learning_rate=0.13, n_epochs=1000,
                           os.path.split(__file__)[1] +
                           ' ran for %.1fs' % ((end_time - start_time)))
 
+
+def create_dataset_tar(name, dataset):
+    # Train_set is a tuple (x,y), where x is of shape (50000,784)
+    # Write data to hdf5 file:
+    x, y = dataset
+    import h5py
+    import tarfile
+    Wfile = h5py.File('x.hdf5', 'w')
+    Wfile.create_dataset(Wfile.id.name, data=x)
+    Wfile.close()
+    Wfile = h5py.File('y.hdf5', 'w')
+    Wfile.create_dataset(Wfile.id.name, data=y)
+    Wfile.close()
+    with tarfile.open("mnist-%s.tar" % name, "w:") as tar:
+        for fname in ['x.hdf5', 'y.hdf5']:
+            tar.add(fname)
+
 if __name__ == '__main__':
+    print(theano.config.floatX)
     sgd_optimization_mnist()
