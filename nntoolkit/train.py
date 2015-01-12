@@ -138,41 +138,6 @@ def minibatch_gradient_descent(model,
         print("Epoch %i/%i, Loss %0.2f" % (i+1, i / loops_per_epoch, err_i))
 
 
-def get_data(data_file):
-    """Get data as x and y numpy arrays for a tar archive.
-    :param training_data: The path to a tar file
-    :returns: Tuple (x, y), where y might be ``None`` in case of success or
-              ``False`` in case of error
-    """
-    if not os.path.isfile(data_file):
-        logging.error("File '%s' does not exist.", data_file)
-        return False
-
-    if not tarfile.is_tarfile(data_file):
-        logging.error("'%s' is not a valid tar file.", data_file)
-        return False
-
-    with tarfile.open(data_file) as tar:
-        filenames = tar.getnames()
-        if 'x.hdf5' not in filenames:
-            logging.error("'%s' does not have a x.hdf5.", data_file)
-            return False
-        tar.extractall()
-        x = h5py.File('x.hdf5', 'r')['x.hdf5'].value
-
-        if 'y.hdf5' in filenames:
-            y = h5py.File('y.hdf5', 'r')['y.hdf5'].value
-            y = y.reshape(len(y), 1)
-        else:
-            y = None
-
-    for filename in filenames:
-        # Cleanup
-        os.remove(filename)
-
-    return (x, y)
-
-
 def main(model_file,
          model_output_file,
          training_data,
@@ -180,7 +145,7 @@ def main(model_file,
          learning_rate,
          epochs):
     """Train model_file with training_data."""
-    x, y = get_data(training_data)
+    x, y = utils.get_data(training_data)
     assert y is not None
     model = utils.get_model(model_file)
     minibatch_gradient_descent(model,

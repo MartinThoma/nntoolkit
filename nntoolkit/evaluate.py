@@ -60,6 +60,11 @@ def show_results(results, n=10, print_results=True):
 
 
 def get_model_output(model, x):
+    """
+    :param model: A dictionary which represents a model
+    :param x: An input vector
+    :returns: The output vector of the model
+    """
     if model['type'] == 'mlp':
         for layer in model['layers']:
             b, W, activation = layer['b'], layer['W'], layer['activation']

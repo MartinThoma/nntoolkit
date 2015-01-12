@@ -22,6 +22,7 @@ import nntoolkit
 from nntoolkit import evaluate
 from nntoolkit import create
 from nntoolkit import train
+from nntoolkit import test
 
 
 def get_parser():
@@ -45,6 +46,10 @@ def get_parser():
                           add_help=False,
                           parents=[train.get_parser()],
                           help="Train a neural network.")
+    subparsers.add_parser('test',
+                          add_help=False,
+                          parents=[test.get_parser()],
+                          help="Test a neural network.")
     return parser
 
 
@@ -60,6 +65,8 @@ def main(args):
                    args.batch_size,
                    args.learning_rate,
                    args.epochs)
+    elif args.cmd == 'test':
+        test.main(args.model_file, args.test_data)
     else:
         logging.warning("Subcommand '%s' not implemented.", args.cmds)
 

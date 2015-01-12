@@ -43,7 +43,7 @@ def is_valid_folder(parser, arg):
 
 def get_activation(activation_str):
     """Return a function that works on a numpy array."""
-    sigmoid = numpy.vectorize(lambda x: 1./(1+math.exp(-x)))
+    sigmoid = numpy.vectorize(lambda x: 1./(1+numpy.exp(-x)))
     if activation_str == 'sigmoid':
         return sigmoid
     elif activation_str == 'softmax':
@@ -131,6 +131,41 @@ def get_model(modelfile):
     # Cleanup
     shutil.rmtree(tarfolder)
     return model_yml
+
+
+def get_data(data_file):
+    """Get data as x and y numpy arrays for a tar archive.
+    :param training_data: The path to a tar file
+    :returns: Tuple (x, y), where y might be ``None`` in case of success or
+              ``False`` in case of error
+    """
+    if not os.path.isfile(data_file):
+        logging.error("File '%s' does not exist.", data_file)
+        return False
+
+    if not tarfile.is_tarfile(data_file):
+        logging.error("'%s' is not a valid tar file.", data_file)
+        return False
+
+    with tarfile.open(data_file) as tar:
+        filenames = tar.getnames()
+        if 'x.hdf5' not in filenames:
+            logging.error("'%s' does not have a x.hdf5.", data_file)
+            return False
+        tar.extractall()
+        x = h5py.File('x.hdf5', 'r')['x.hdf5'].value
+
+        if 'y.hdf5' in filenames:
+            y = h5py.File('y.hdf5', 'r')['y.hdf5'].value
+            y = y.reshape(len(y), 1)
+        else:
+            y = None
+
+    for filename in filenames:
+        # Cleanup
+        os.remove(filename)
+
+    return (x, y)
 
 
 def write_model(model, model_file_path):
