@@ -20,11 +20,14 @@ config = {
     'cmdclass': {'build_txt': build_ext},  # numpy hack
     'setup_requires': ['numpy'],           # numpy hack
     'name': 'nntoolkit',
-    'version': '0.1.25',
+    'version': '0.1.27',
     'author': 'Martin Thoma',
     'author_email': 'info@martin-thoma.de',
+    'maintainer': 'Martin Thoma',
+    'maintainer_email': 'info@martin-thoma.de',
     'packages': ['nntoolkit'],
     'scripts': ['bin/nntoolkit'],
+    'platforms': ['Linux', 'MacOS X', 'Windows'],
     'url': 'https://github.com/MartinThoma/nntoolkit',
     'license': 'MIT',
     'description': 'Neural Network Toolkit',
