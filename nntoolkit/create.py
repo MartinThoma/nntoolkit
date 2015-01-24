@@ -55,7 +55,7 @@ def main(nn_type, architecture, model_file):
     neurons_a, neurons_b=zip(neurons, neurons[1:])[0]
  
     fan_in=neurons[0]
-    fan_out= len(neurons)  
+    fan_out= len(neurons)-2  
     model={}
 
     if nn_type[0] == 'mlp':
