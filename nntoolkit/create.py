@@ -10,6 +10,7 @@ import random
 import yaml
 import h5py
 import numpy
+import theano
 
 
 def get_parser():
@@ -36,7 +37,12 @@ def get_parser():
 
 
 def main(nn_type, architecture, model_file):
-    """Create a neural network file of ``nn_type`` with ``architecture``."""
+    """Create a neural network file of ``nn_type`` with ``architecture``.
+       Store it in ``model_file``.
+       :param nn_type: A string, e.g. 'mlp'
+       :param model_file: A path which should end with .tar. The created model
+       will be written there.
+    """
     if os.path.isfile(model_file):
         logging.error("'%s' already exists.", model_file)
         return
@@ -47,30 +53,29 @@ def main(nn_type, architecture, model_file):
 
     filenames = ["model.yml"]  # "input_semantics.csv", "output_semantics.csv"
 
-    layers_binary = []
-    # TODO: the activation function could be here!
-    neurons = list(map(int, architecture.split(':')))
-
-    neurons_a, neurons_b=zip(neurons, neurons[1:])[0]
- 
-    fan_in=neurons[0]
-    fan_out= len(neurons)-2  
-    model={}
-
-    if nn_type[0] == 'mlp':
+    if nn_type == 'mlp':
         # Create layers by looking at 'architecture'
         layers = []
         layers_binary = []
 
-        for neurons_a, neurons_b in zip(neurons, neurons[1:]):
+        # TODO: the activation function could be here!
+        neurons = list(map(int, architecture.split(':')))
 
-            init_weight= 4.0*numpy.sqrt(6.0/(fan_in+fan_out))
-            W = [numpy.random.uniform(low=-init_weight, high=init_weight, size=neurons_a) for j in range(neurons_b)]
-           
+        for neurons_b, neurons_a in zip(neurons, neurons[1:]):
+            fan_in = neurons_a
+            fan_out = neurons_b - 2
+            init_weight = 4.0*numpy.sqrt(6.0/(fan_in+fan_out))
+            W = [numpy.random.uniform(low=-init_weight,
+                                      high=init_weight,
+                                      size=neurons_a)
+                 for j in range(neurons_b)]
+
             # TODO: neurons_a or b?
             b = [random.random() for i in range(neurons_a)]
-            layers_binary.append({'W': numpy.array(W),
-                                  'b': numpy.array(b),
+            layers_binary.append({'W': numpy.array(W,
+                                                   dtype=theano.config.floatX),
+                                  'b': numpy.array(b,
+                                                   dtype=theano.config.floatX),
                                   'activation': 'sigmoid'})  # TODO: activation
 
     # Write layers
