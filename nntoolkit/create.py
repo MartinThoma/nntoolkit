@@ -47,18 +47,26 @@ def main(nn_type, architecture, model_file):
 
     filenames = ["model.yml"]  # "input_semantics.csv", "output_semantics.csv"
 
-    if nn_type == 'mlp':
+    layers_binary = []
+    # TODO: the activation function could be here!
+    neurons = list(map(int, architecture.split(':')))
+
+    neurons_a, neurons_b=zip(neurons, neurons[1:])[0]
+ 
+    fan_in=neurons[0]
+    fan_out= len(neurons)-2  
+    model={}
+
+    if nn_type[0] == 'mlp':
         # Create layers by looking at 'architecture'
         layers = []
         layers_binary = []
 
-        # TODO: the activation function could be here!
-        neurons = list(map(int, architecture.split(':')))
-
         for neurons_a, neurons_b in zip(neurons, neurons[1:]):
-            # TODO: right order?
-            W = [[random.random() for i in range(neurons_a)]
-                 for j in range(neurons_b)]
+
+            init_weight= 4.0*numpy.sqrt(6.0/(fan_in+fan_out))
+            W = [numpy.random.uniform(low=-init_weight, high=init_weight, size=neurons_a) for j in range(neurons_b)]
+           
             # TODO: neurons_a or b?
             b = [random.random() for i in range(neurons_a)]
             layers_binary.append({'W': numpy.array(W),
@@ -85,11 +93,11 @@ def main(nn_type, architecture, model_file):
 
         model = {'type': 'mlp', 'layers': layers}
 
-    with open("model.yml", 'w') as f:
+    with open('model.yml', 'w') as f:
         yaml.dump(model, f, default_flow_style=False)
 
     # Create tar file
-    with tarfile.open("model.tar", "w:") as tar:
+    with tarfile.open(model_file, "w:") as tar:
         for name in filenames:
             tar.add(name)
 
