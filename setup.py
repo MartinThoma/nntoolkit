@@ -31,8 +31,11 @@ config = {
     'url': 'https://github.com/MartinThoma/nntoolkit',
     'license': 'MIT',
     'description': 'Neural Network Toolkit',
-    'long_description': """A tookit for training feed-forward neural
-        networks.""",
+    'long_description': ("A tookit for training feed-forward neural networks. "
+                         "nntoolkit is designed to be used from both, "
+                         "within Python scripts and from the shell. "
+                         "See http://pythonhosted.org/nntoolkit/ for the "
+                         "documentation."),
     'install_requires': [
         "argparse",
         "theano",
