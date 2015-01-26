@@ -6,7 +6,6 @@ import os
 import logging
 import tempfile
 import numpy
-import math
 import shutil
 import sys
 
@@ -61,7 +60,7 @@ def get_outputs(output_file):
     mode = 'rt'
     arguments = {'newline': '', 'encoding': 'utf8'}
     with open(output_file, mode, **arguments) as csvfile:
-        spamreader = csv.reader(csvfile, delimiter=' ', quotechar='|')
+        spamreader = csv.reader(csvfile, delimiter="\n", quotechar='|')
         for row in spamreader:
             outputs.append(row[0])
     return outputs
