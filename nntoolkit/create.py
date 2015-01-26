@@ -61,6 +61,7 @@ def main(nn_type, architecture, model_file):
         # TODO: the activation function could be here!
         neurons = list(map(int, architecture.split(':')))
 
+        layer_counter = 0
         for neurons_b, neurons_a in zip(neurons, neurons[1:]):
             fan_in = neurons_a
             fan_out = neurons_b - 2
@@ -73,12 +74,16 @@ def main(nn_type, architecture, model_file):
             b = [random.random() for i in range(neurons_a)]
             # TODO: parse architecture string to allow arbitrary activation
             # functions
-            layer_activation = 'sigmoid'
+            if layer_counter + 2 == len(neurons):
+                layer_activation = 'softmax'
+            else:
+                layer_activation = 'sigmoid'
             layers_binary.append({'W': numpy.array(W,
                                                    dtype=theano.config.floatX),
                                   'b': numpy.array(b,
                                                    dtype=theano.config.floatX),
                                   'activation': layer_activation})
+            layer_counter += 1
 
         # Create and add input_semantics.csv
         with open("input_semantics.csv", 'w') as f:
