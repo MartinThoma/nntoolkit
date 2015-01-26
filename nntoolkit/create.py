@@ -70,13 +70,27 @@ def main(nn_type, architecture, model_file):
                                       size=neurons_a)
                  for j in range(neurons_b)]
 
-            # TODO: neurons_a or b?
             b = [random.random() for i in range(neurons_a)]
+            # TODO: parse architecture string to allow arbitrary activation
+            # functions
+            layer_activation = 'sigmoid'
             layers_binary.append({'W': numpy.array(W,
                                                    dtype=theano.config.floatX),
                                   'b': numpy.array(b,
                                                    dtype=theano.config.floatX),
-                                  'activation': 'sigmoid'})  # TODO: activation
+                                  'activation': layer_activation})
+
+        # Create and add input_semantics.csv
+        with open("input_semantics.csv", 'w') as f:
+            for i in range(neurons[0]):
+                f.write("input neuron %i\n" % i)
+        filenames.append("input_semantics.csv")
+
+        # Create and add output_semantics.csv
+        with open("output_semantics.csv", 'w') as f:
+            for i in range(neurons[-1]):
+                f.write("output neuron %i\n" % i)
+        filenames.append("output_semantics.csv")
 
     # Write layers
     for i, layer in enumerate(layers_binary):
