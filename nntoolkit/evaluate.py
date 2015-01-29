@@ -75,6 +75,12 @@ def get_model_output(model, x):
 
 
 def get_results(model_output, output_semantics):
+    """
+    :param model_output: A list of probabilities
+    :param output_semantics: A list of semantics
+    :returns: A list of dictionaries which have probability and semantics as
+    keys.
+    """
     results = []
     for symbolnr, prob in enumerate(model_output):
         results.append({'symbolnr': symbolnr,

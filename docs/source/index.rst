@@ -12,6 +12,7 @@ Contents:
    :maxdepth: 2
 
    installation
+   development
    mlps
    model-format
    data-format

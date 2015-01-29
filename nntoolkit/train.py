@@ -5,10 +5,7 @@
 
 
 import numpy as np
-import tarfile
 import logging
-import os
-import h5py
 
 import theano
 import theano.tensor as tensor
