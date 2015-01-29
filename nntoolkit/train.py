@@ -142,7 +142,11 @@ def main(model_file,
          learning_rate,
          epochs):
     """Train model_file with training_data."""
-    x, y = utils.get_data(training_data)
+    data = utils.get_data(training_data)
+    if data is None:
+        logging.error("Data could not be loaded. Stop training.")
+        return
+    x, y = data
     assert y is not None
     model = utils.get_model(model_file)
     minibatch_gradient_descent(model,
