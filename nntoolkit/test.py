@@ -4,6 +4,7 @@
 """Test a neural network."""
 
 import numpy
+import logging
 
 # nntoolkit modules
 import nntoolkit.utils as utils
@@ -38,7 +39,11 @@ def main(model_file, test_data, verbose=True):
     :returns: Testing results
     """
     model = utils.get_model(model_file)
-    x_vec, y_vec = utils.get_data(test_data)
+    data = utils.get_data(test_data)
+    if data is None:
+        logging.error("Data could not be loaded. Stop testing.")
+        return
+    x_vec, y_vec = data
     correct = 0
     total = 0
     for x, y in zip(x_vec, y_vec):

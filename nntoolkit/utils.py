@@ -58,8 +58,7 @@ def get_outputs(output_file):
     """
     outputs = []
     mode = 'rt'
-    arguments = {'newline': '', 'encoding': 'utf8'}
-    with open(output_file, mode, **arguments) as csvfile:
+    with open(output_file, mode, newline='', encoding='utf8') as csvfile:
         spamreader = csv.reader(csvfile, delimiter="\n", quotechar='|')
         for row in spamreader:
             outputs.append(row[0])
