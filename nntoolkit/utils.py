@@ -64,7 +64,38 @@ def get_outputs(output_file):
             outputs.append(row[0])
     return outputs
 
-def create_taryml(tarfolder,):
+def check_and_create_model(modelfile):
+    if not os.path.isfile(modelfile):
+        logging.error("File '%s' does not exist.", modelfile)
+        return False
+    if not tarfile.is_tarfile(modelfile):
+        logging.error("'%s' is not a valid tar file.", modelfile)
+        return False
+    tar = tarfile.open(modelfile)
+    filenames = tar.getnames()
+    if 'model.yml' not in filenames:
+        logging.error("'%s' does not have a model.yml.", modelfile)
+        return False
+    if 'input_semantics.csv' not in filenames:
+        logging.error("'%s' does not have an input_semantics.csv.", modelfile)
+        return False
+    if 'output_semantics.csv' not in filenames:
+        logging.error("'%s' does not have an output_semantics.csv.", modelfile)
+        return False
+    tarfolder = tempfile.mkdtemp()
+    tar.extractall(path=tarfolder)
+    tar.close()
+    return True,tarfolder
+
+def get_model(modelfile):
+    """Check if ``modelfile`` is valid.
+    :param modelfile: path to a model.tar file which describes a neural
+        network.
+    :returns: A dictionary which describes the model if everything seems to be
+        fine. Return ``False`` if errors occur.
+    """
+    tarfolder=check_and_create_model(modelfile)
+
     model_yml = yaml.load(future_open(os.path.join(tarfolder, 'model.yml')))
     if model_yml['type'] == 'mlp':
         layers = []
@@ -102,36 +133,6 @@ def create_taryml(tarfolder,):
     # Cleanup
     shutil.rmtree(tarfolder)
     return model_yml
-
-def get_model(modelfile):
-    """Check if ``modelfile`` is valid.
-    :param modelfile: path to a model.tar file which describes a neural
-        network.
-    :returns: A dictionary which describes the model if everything seems to be
-        fine. Return ``False`` if errors occur.
-    """
-    if not os.path.isfile(modelfile):
-        logging.error("File '%s' does not exist.", modelfile)
-        return False
-    if not tarfile.is_tarfile(modelfile):
-        logging.error("'%s' is not a valid tar file.", modelfile)
-        return False
-    tar = tarfile.open(modelfile)
-    filenames = tar.getnames()
-    if 'model.yml' not in filenames:
-        logging.error("'%s' does not have a model.yml.", modelfile)
-        return False
-    if 'input_semantics.csv' not in filenames:
-        logging.error("'%s' does not have an input_semantics.csv.", modelfile)
-        return False
-    if 'output_semantics.csv' not in filenames:
-        logging.error("'%s' does not have an output_semantics.csv.", modelfile)
-        return False
-    tarfolder = tempfile.mkdtemp()
-    tar.extractall(path=tarfolder)
-    tar.close()
-
-    return create_taryml(tarfolder)
 
 
 def get_data(data_file):
