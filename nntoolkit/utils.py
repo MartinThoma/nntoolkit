@@ -94,7 +94,7 @@ def get_model(modelfile):
     :returns: A dictionary which describes the model if everything seems to be
         fine. Return ``False`` if errors occur.
     """
-    tarfolder=check_and_create_model(modelfile)
+    tarfolder = check_and_create_model(modelfile)
     if not tarfolder:
         return
 

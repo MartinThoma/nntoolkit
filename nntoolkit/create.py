@@ -116,7 +116,7 @@ def main(nn_type, architecture, model_file):
         neurons = list(map(int, architecture.split(':')))
 
 
-        layers_binary,layer_counter=create_layers(neurons)
+        layers_binary,layer_counter = create_layers(neurons)
 
         create_semantics_io_files(neurons)
         filenames.append("input_semantics.csv")
