@@ -46,11 +46,11 @@ def xaviar10_weight_init(neurons_a, neurons_b):
 def file_validate(model_file):
     if os.path.isfile(model_file):
         logging.error("'%s' already exists.", model_file)
-        return
+        raise IOError
     if not model_file.endswith(".tar"):
         logging.error("'%s' does not end with '.tar'.", model_file)
-        return
-    #TODO raise error
+        raise IOError
+
 def create_semantics_io_files(neurons):
         # Create and add input_semantics.csv
     with open("input_semantics.csv", 'w') as f:
@@ -62,6 +62,7 @@ def create_semantics_io_files(neurons):
     with open("output_semantics.csv", 'w') as f:
         for i in range(neurons[-1]):
             f.write("output neuron %i\n" % i)
+
 def hdf5_file_write(i, layer):
     Wfile = h5py.File('W%i.hdf5' % i, 'w')
     Wfile.create_dataset(Wfile.id.name, data=layer['W'])
@@ -70,6 +71,7 @@ def hdf5_file_write(i, layer):
     bfile = h5py.File('b%i.hdf5' % i, 'w')
     bfile.create_dataset(bfile.id.name, data=layer['b'])
     bfile.close()
+
 def create_layers(neurons):
     layer_counter = 0
     layers_binary = []
@@ -88,7 +90,8 @@ def create_layers(neurons):
                               'b': numpy.array(b,dtype=theano.config.floatX),
                               'activation': layer_activation})
         layer_counter += 1
-        return layers_binary,layer_counter
+    return layers_binary,layer_counter
+
 def main(nn_type, architecture, model_file):
     """Create a neural network file of ``nn_type`` with ``architecture``.
        Store it in ``model_file``.
@@ -96,7 +99,11 @@ def main(nn_type, architecture, model_file):
        :param model_file: A path which should end with .tar. The created model
        will be written there.
     """
-    file_validate(model_file)
+    try:
+        file_validate(model_file)
+    except IOError:
+        return
+
     logging.info("Create %s with a %s architecture...", nn_type, architecture)
 
     filenames = ["model.yml"]  # "input_semantics.csv", "output_semantics.csv"
