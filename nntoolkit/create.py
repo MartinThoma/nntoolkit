@@ -70,7 +70,7 @@ def hdf5_file_write(i, layer):
     bfile = h5py.File('b%i.hdf5' % i, 'w')
     bfile.create_dataset(bfile.id.name, data=layer['b'])
     bfile.close()
-def layers(neurons):
+def create_layers(neurons):
     layer_counter = 0
     layers_binary = []
     for neurons_b, neurons_a in zip(neurons, neurons[1:]):
@@ -109,9 +109,9 @@ def main(nn_type, architecture, model_file):
         neurons = list(map(int, architecture.split(':')))
 
 
-        layers_binary,layer_counter=layers(neurons)
+        layers_binary,layer_counter=create_layers(neurons)
 
-        create_semantics_io_files()
+        create_semantics_io_files(neurons)
         filenames.append("input_semantics.csv")
         filenames.append("output_semantics.csv")
 

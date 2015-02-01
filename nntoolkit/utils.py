@@ -94,8 +94,9 @@ def get_model(modelfile):
     :returns: A dictionary which describes the model if everything seems to be
         fine. Return ``False`` if errors occur.
     """
-    tarfolder=check_and_create_model(modelfile)
-
+    flag, tarfolder=check_and_create_model(modelfile)
+    if not flag:
+        return
     model_yml = yaml.load(future_open(os.path.join(tarfolder, 'model.yml')))
     if model_yml['type'] == 'mlp':
         layers = []
