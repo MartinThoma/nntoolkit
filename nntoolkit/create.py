@@ -35,11 +35,11 @@ def get_parser():
                         metavar="MODEL_FILE")
     return parser
 
-def xaviar10_weight_init(neurons_a,neurons_b):
+def xaviar10_weight_init(neurons_a, neurons_b):
     fan_in = neurons_a
     fan_out = neurons_b - 2
     init_weight = 4.0*numpy.sqrt(6.0/(fan_in+fan_out))
-    _W = [numpy.random.uniform(low=-init_weight,high=init_weight,size=neurons_a) \
+    _W = [numpy.random.uniform(low=-init_weight, high=init_weight, size=neurons_a) \
          for j in range(neurons_b)]
     return _W
 
@@ -62,7 +62,7 @@ def create_semantics_io_files(neurons):
     with open("output_semantics.csv", 'w') as f:
         for i in range(neurons[-1]):
             f.write("output neuron %i\n" % i)
-def hdf5_file_write(i,layer):
+def hdf5_file_write(i, layer):
     Wfile = h5py.File('W%i.hdf5' % i, 'w')
     Wfile.create_dataset(Wfile.id.name, data=layer['W'])
     Wfile.close()
@@ -71,8 +71,8 @@ def hdf5_file_write(i,layer):
     bfile.create_dataset(bfile.id.name, data=layer['b'])
     bfile.close()
 def layers(neurons):
-    layer_counter=0
-    layers_binary=[]
+    layer_counter = 0
+    layers_binary = []
     for neurons_b, neurons_a in zip(neurons, neurons[1:]):
         W= xaviar10_weight_init(neurons_a,neurons_b)
 
