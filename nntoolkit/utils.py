@@ -19,7 +19,7 @@ import csv
 PY3 = sys.version > '3'
 
 if not PY3:
-    from future.builtins import open
+    from future.builtins import open as future_open
 
 
 def is_valid_file(parser, arg):
@@ -58,7 +58,7 @@ def get_outputs(output_file):
     """
     outputs = []
     mode = 'rt'
-    with open(output_file, mode, newline='', encoding='utf8') as csvfile:
+    with future_open(output_file, mode, newline='', encoding='utf8') as csvfile:
         spamreader = csv.reader(csvfile, delimiter="\n", quotechar='|')
         for row in spamreader:
             outputs.append(row[0])
@@ -92,7 +92,7 @@ def get_model(modelfile):
     tarfolder = tempfile.mkdtemp()
     tar.extractall(path=tarfolder)
     tar.close()
-    model_yml = yaml.load(open(os.path.join(tarfolder, 'model.yml')))
+    model_yml = yaml.load(future_open(os.path.join(tarfolder, 'model.yml')))
     if model_yml['type'] == 'mlp':
         layers = []
         for layer in model_yml['layers']:
@@ -118,7 +118,7 @@ def get_model(modelfile):
     arguments = {'newline': '', 'encoding': 'utf8'}
 
     input_semantics_file = os.path.join(tarfolder, 'input_semantics.csv')
-    with open(input_semantics_file, mode, **arguments) as csvfile:
+    with future_open(input_semantics_file, mode, **arguments) as csvfile:
         spamreader = csv.reader(csvfile, delimiter="\n", quotechar='"')
         for row in spamreader:
             inputs.append(row[0])
@@ -178,7 +178,7 @@ def write_model(model, model_file_path):
     filenames = ["model.yml", "input_semantics.csv", "output_semantics.csv"]
 
     # input_semantics
-    with open("input_semantics.csv", 'wb') as csvfile:
+    with future_open("input_semantics.csv", 'wb') as csvfile:
         spamwriter = csv.writer(csvfile,
                                 delimiter="\n",
                                 quotechar='"',
@@ -187,7 +187,7 @@ def write_model(model, model_file_path):
             spamwriter.writerow(semantic)
 
     # output_semantics
-    with open("output_semantics.csv", 'wb') as csvfile:
+    with future_open("output_semantics.csv", 'wb') as csvfile:
         spamwriter = csv.writer(csvfile,
                                 delimiter="\n",
                                 quotechar='"',
@@ -216,7 +216,7 @@ def write_model(model, model_file_path):
         filenames.append('b%i.hdf5' % i)
 
     # Create YAML file
-    with open("model.yml", 'w') as f:
+    with future_open("model.yml", 'w') as f:
         yaml.dump(model_yml, f, default_flow_style=False)
 
     # Create tar file
