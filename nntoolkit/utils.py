@@ -169,18 +169,7 @@ def get_data(data_file):
 
     return (x, y)
 
-
-def write_model(model, model_file_path):
-    """Write ``model`` to ``model_file_path``.
-    :returns: False if it failed.
-    """
-    model_yml = {}
-    model_yml['type'] = 'mlp'
-
-    logging.info("Create %s...", model_yml['type'])
-
-    filenames = ["model.yml", "input_semantics.csv", "output_semantics.csv"]
-
+def create_csv_io_files(model):
     # input_semantics
     with future_open("input_semantics.csv", 'wb') as csvfile:
         spamwriter = csv.writer(csvfile,
@@ -198,6 +187,20 @@ def write_model(model, model_file_path):
                                 quoting=csv.QUOTE_MINIMAL)
         for semantic in model['outputs']:
             spamwriter.writerow(semantic)
+
+def write_model(model, model_file_path):
+    """Write ``model`` to ``model_file_path``.
+    :returns: False if it failed.
+    """
+    model_yml = {}
+    model_yml['type'] = 'mlp'
+    create_csv_io_files(model)
+
+    logging.info("Create %s...", model_yml['type'])
+
+    filenames = ["model.yml", "input_semantics.csv", "output_semantics.csv"]
+
+
 
     # Write HDF5 files
     model_yml['layers'] = []
