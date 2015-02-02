@@ -39,9 +39,9 @@ def xaviar10_weight_init(neurons_a, neurons_b):
     fan_in = neurons_a
     fan_out = neurons_b - 2
     init_weight = 4.0*numpy.sqrt(6.0/(fan_in+fan_out))
-    _W = [numpy.random.uniform(low=-init_weight, high=init_weight, size=neurons_a) \
+    W = [numpy.random.uniform(low=-init_weight, high=init_weight, size=neurons_a) \
          for j in range(neurons_b)]
-    return _W
+    return W
 
 def file_validate(model_file):
     if os.path.isfile(model_file):
@@ -52,7 +52,7 @@ def file_validate(model_file):
         raise IOError
 
 def create_semantics_io_files(neurons):
-        # Create and add input_semantics.csv
+    # Create and add input_semantics.csv
     with open("input_semantics.csv", 'w') as f:
         for i in range(neurons[0]):
             f.write("input neuron %i\n" % i)
@@ -76,7 +76,7 @@ def create_layers(neurons):
     layer_counter = 0
     layers_binary = []
     for neurons_b, neurons_a in zip(neurons, neurons[1:]):
-        W= xaviar10_weight_init(neurons_a,neurons_b)
+        W= xaviar10_weight_init(neurons_a, neurons_b)
 
         b = [random.random() for i in range(neurons_a)]
         # TODO: parse architecture string to allow arbitrary activation
@@ -90,7 +90,7 @@ def create_layers(neurons):
                               'b': numpy.array(b,dtype=theano.config.floatX),
                               'activation': layer_activation})
         layer_counter += 1
-    return layers_binary,layer_counter
+    return layers_binary, layer_counter
 
 def main(nn_type, architecture, model_file):
     """Create a neural network file of ``nn_type`` with ``architecture``.
@@ -115,8 +115,7 @@ def main(nn_type, architecture, model_file):
         # TODO: the activation function could be here!
         neurons = list(map(int, architecture.split(':')))
 
-
-        layers_binary,layer_counter = create_layers(neurons)
+        layers_binary, layer_counter = create_layers(neurons)
 
         create_semantics_io_files(neurons)
         filenames.append("input_semantics.csv")
@@ -124,7 +123,7 @@ def main(nn_type, architecture, model_file):
 
     # Write layers
     for i, layer in enumerate(layers_binary):
-        hdf5_file_write(i,layer)
+        hdf5_file_write(i, layer)
 
         layers.append({'W': {'size': list(layer['W'].shape),
                              'filename': 'W%i.hdf5' % i},
