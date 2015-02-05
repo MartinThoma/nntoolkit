@@ -12,3 +12,5 @@ X contains the features of all training examples and Y contains the labels.
 Then $X \in \mathbb{R}^{n \times m}$ and $L \in \mathbb{n \times 1}$ where
 $n$ is the number of training examples and $m$ is the number of features.
 $L$ might be $\mathbb{N}$ or simply strings.
+
+To look at HDF5 files, you can use `hdfview`.

@@ -55,7 +55,8 @@ def main(model_file, test_data, verbose=True):
         total += 1
         if verbose and total % 100 == 0:
             print("%i: %0.2f" % (total, float(correct)/total))
-    print("Correct: %i/%i = %0.2f" % (correct, total, float(correct)/total))
+    print("Correct: %i/%i = %0.2f of total correct" %
+          (correct, total, float(correct)/total))
     return float(correct)/total
 
 if __name__ == '__main__':
