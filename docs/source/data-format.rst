@@ -6,6 +6,7 @@ A data file can be training or evaluation data. Both files are ``.tar`` files.
 The training data file ``train.tar`` has to contain a ``x.hdf5`` and a
 ``y.hdf5``. Both HDF5 files have to contain matrices. Let's call the matrix
 in ``x.hdf5`` X and similarly the matrix in ``y.hdf5`` Y.
+(The HDF files both contain exactly one object called ``x.hdf5`` or ``y.hdf5``)
 
 X contains the features of all training examples and Y contains the labels.
 
