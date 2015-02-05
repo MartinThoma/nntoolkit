@@ -75,9 +75,9 @@ def main(nn_type, architecture, model_file):
             # TODO: parse architecture string to allow arbitrary activation
             # functions
             if layer_counter + 2 == len(neurons):
-                layer_activation = 'softmax'
+                layer_activation = 'Softmax'
             else:
-                layer_activation = 'sigmoid'
+                layer_activation = 'Sigmoid'
             layers_binary.append({'W': numpy.array(W,
                                                    dtype=theano.config.floatX),
                                   'b': numpy.array(b,
