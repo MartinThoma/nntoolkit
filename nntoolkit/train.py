@@ -131,8 +131,6 @@ def minibatch_gradient_descent(model,
             continue  # TODO: Eventually we miss training examples!
         x_i = x[start:end]
         y_i = y[start:end]
-        logging.debug(x_i.shape)
-        logging.debug(y_i.shape)
         err_i = train(x_i, y_i)
         #if i % loops_per_epoch == 0:
         print("Epoch %i/%i, Loss %0.2f" % (i+1, i / loops_per_epoch, err_i))

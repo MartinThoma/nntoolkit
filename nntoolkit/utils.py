@@ -8,6 +8,7 @@ import tempfile
 import numpy
 import shutil
 import sys
+import inspect
 
 # Data formats
 import tarfile
@@ -15,6 +16,8 @@ import h5py
 import yaml
 import csv
 
+# nntoolkit
+from nntoolkit.activation_functions import get_activation_function as get_af
 
 PY3 = sys.version > '3'
 
@@ -38,15 +41,6 @@ def is_valid_folder(parser, arg):
         parser.error("The folder %s does not exist!" % arg)
     else:
         return arg
-
-
-def get_activation(activation_str):
-    """Return a function that works on a numpy array."""
-    sigmoid = numpy.vectorize(lambda x: 1./(1+numpy.exp(-x)))
-    if activation_str == 'sigmoid':
-        return sigmoid
-    elif activation_str == 'softmax':
-        return lambda x: numpy.divide(numpy.exp(x), numpy.sum(numpy.exp(x)))
 
 
 def get_outputs(output_file):
@@ -104,7 +98,7 @@ def get_model(modelfile):
             f = h5py.File(os.path.join(tarfolder, layer['W']['filename']), 'r')
             layertmp['W'] = f[layer['W']['filename']].value
 
-            layertmp['activation'] = get_activation(layer['activation'])
+            layertmp['activation'] = get_af(layer['activation'])
 
             layers.append(layertmp)
     model_yml['layers'] = layers
@@ -203,7 +197,7 @@ def write_model(model, model_file_path):
                                           'filename': 'W%i.hdf5' % i},
                                     'b': {'size': list(b.shape),
                                           'filename': 'b%i.hdf5' % i},
-                                    'activation': 'TODO'})
+                                    'activation': str(layer['activation'])})
         # Write HDF5 files
         Wfile = h5py.File('W%i.hdf5' % i, 'w')
         Wfile.create_dataset(Wfile.id.name, data=W)
