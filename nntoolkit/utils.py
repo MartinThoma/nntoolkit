@@ -58,6 +58,28 @@ def get_outputs(output_file):
             outputs.append(row[0])
     return outputs
 
+def check_and_create_model(modelfile):
+    if not os.path.isfile(modelfile):
+        logging.error("File '%s' does not exist.", modelfile)
+        return None
+    if not tarfile.is_tarfile(modelfile):
+        logging.error("'%s' is not a valid tar file.", modelfile)
+        return None
+    tar = tarfile.open(modelfile)
+    filenames = tar.getnames()
+    if 'model.yml' not in filenames:
+        logging.error("'%s' does not have a model.yml.", modelfile)
+        return None
+    if 'input_semantics.csv' not in filenames:
+        logging.error("'%s' does not have an input_semantics.csv.", modelfile)
+        return None
+    if 'output_semantics.csv' not in filenames:
+        logging.error("'%s' does not have an output_semantics.csv.", modelfile)
+        return None
+    tarfolder = tempfile.mkdtemp()
+    tar.extractall(path=tarfolder)
+    tar.close()
+    return tarfolder
 
 def get_model(modelfile):
     """Check if ``modelfile`` is valid.
@@ -66,26 +88,10 @@ def get_model(modelfile):
     :returns: A dictionary which describes the model if everything seems to be
         fine. Return ``False`` if errors occur.
     """
-    if not os.path.isfile(modelfile):
-        logging.error("File '%s' does not exist.", modelfile)
-        return False
-    if not tarfile.is_tarfile(modelfile):
-        logging.error("'%s' is not a valid tar file.", modelfile)
-        return False
-    tar = tarfile.open(modelfile)
-    filenames = tar.getnames()
-    if 'model.yml' not in filenames:
-        logging.error("'%s' does not have a model.yml.", modelfile)
-        return False
-    if 'input_semantics.csv' not in filenames:
-        logging.error("'%s' does not have an input_semantics.csv.", modelfile)
-        return False
-    if 'output_semantics.csv' not in filenames:
-        logging.error("'%s' does not have an output_semantics.csv.", modelfile)
-        return False
-    tarfolder = tempfile.mkdtemp()
-    tar.extractall(path=tarfolder)
-    tar.close()
+    tarfolder = check_and_create_model(modelfile)
+    if not tarfolder:
+        return
+
     model_yml = yaml.load(open(os.path.join(tarfolder, 'model.yml')))
     if model_yml['type'] == 'mlp':
         layers = []
@@ -159,18 +165,7 @@ def get_data(data_file):
 
     return (x, y)
 
-
-def write_model(model, model_file_path):
-    """Write ``model`` to ``model_file_path``.
-    :returns: False if it failed.
-    """
-    model_yml = {}
-    model_yml['type'] = 'mlp'
-
-    logging.info("Create %s...", model_yml['type'])
-
-    filenames = ["model.yml", "input_semantics.csv", "output_semantics.csv"]
-
+def create_csv_io_files(model):
     # input_semantics
     with open("input_semantics.csv", 'wb') as csvfile:
         spamwriter = csv.writer(csvfile,
@@ -188,6 +183,20 @@ def write_model(model, model_file_path):
                                 quoting=csv.QUOTE_MINIMAL)
         for semantic in model['outputs']:
             spamwriter.writerow(semantic)
+
+def write_model(model, model_file_path):
+    """Write ``model`` to ``model_file_path``.
+    :returns: False if it failed.
+    """
+    model_yml = {}
+    model_yml['type'] = 'mlp'
+    create_csv_io_files(model)
+
+    logging.info("Create %s...", model_yml['type'])
+
+    filenames = ["model.yml", "input_semantics.csv", "output_semantics.csv"]
+
+
 
     # Write HDF5 files
     model_yml['layers'] = []
