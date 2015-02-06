@@ -5,10 +5,8 @@
 import os
 import logging
 import tempfile
-import numpy
 import shutil
 import sys
-import inspect
 
 # Data formats
 import tarfile
@@ -58,6 +56,7 @@ def get_outputs(output_file):
             outputs.append(row[0])
     return outputs
 
+
 def check_and_create_model(modelfile):
     if not os.path.isfile(modelfile):
         logging.error("File '%s' does not exist.", modelfile)
@@ -80,6 +79,7 @@ def check_and_create_model(modelfile):
     tar.extractall(path=tarfolder)
     tar.close()
     return tarfolder
+
 
 def get_model(modelfile):
     """Check if ``modelfile`` is valid.
@@ -165,6 +165,7 @@ def get_data(data_file):
 
     return (x, y)
 
+
 def create_csv_io_files(model):
     # input_semantics
     with open("input_semantics.csv", 'wb') as csvfile:
@@ -184,6 +185,7 @@ def create_csv_io_files(model):
         for semantic in model['outputs']:
             spamwriter.writerow(semantic)
 
+
 def write_model(model, model_file_path):
     """Write ``model`` to ``model_file_path``.
     :returns: False if it failed.
@@ -195,8 +197,6 @@ def write_model(model, model_file_path):
     logging.info("Create %s...", model_yml['type'])
 
     filenames = ["model.yml", "input_semantics.csv", "output_semantics.csv"]
-
-
 
     # Write HDF5 files
     model_yml['layers'] = []

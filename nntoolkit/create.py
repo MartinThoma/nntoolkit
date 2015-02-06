@@ -35,13 +35,17 @@ def get_parser():
                         metavar="MODEL_FILE")
     return parser
 
+
 def xaviar10_weight_init(neurons_a, neurons_b):
     fan_in = neurons_a
     fan_out = neurons_b - 2
     init_weight = 4.0*numpy.sqrt(6.0/(fan_in+fan_out))
-    W = [numpy.random.uniform(low=-init_weight, high=init_weight, size=neurons_a) \
+    W = [numpy.random.uniform(low=-init_weight,
+                              high=init_weight,
+                              size=neurons_a)
          for j in range(neurons_b)]
     return W
+
 
 def file_validate(model_file):
     if os.path.isfile(model_file):
@@ -51,17 +55,18 @@ def file_validate(model_file):
         logging.error("'%s' does not end with '.tar'.", model_file)
         raise IOError
 
+
 def create_semantics_io_files(neurons):
     # Create and add input_semantics.csv
     with open("input_semantics.csv", 'w') as f:
         for i in range(neurons[0]):
             f.write("input neuron %i\n" % i)
 
-
     # Create and add output_semantics.csv
     with open("output_semantics.csv", 'w') as f:
         for i in range(neurons[-1]):
             f.write("output neuron %i\n" % i)
+
 
 def hdf5_file_write(i, layer):
     Wfile = h5py.File('W%i.hdf5' % i, 'w')
@@ -72,12 +77,12 @@ def hdf5_file_write(i, layer):
     bfile.create_dataset(bfile.id.name, data=layer['b'])
     bfile.close()
 
+
 def create_layers(neurons):
     layer_counter = 0
     layers_binary = []
     for neurons_b, neurons_a in zip(neurons, neurons[1:]):
-        W= xaviar10_weight_init(neurons_a, neurons_b)
-
+        W = xaviar10_weight_init(neurons_a, neurons_b)
         b = [random.random() for i in range(neurons_a)]
         # TODO: parse architecture string to allow arbitrary activation
         # functions
@@ -86,11 +91,12 @@ def create_layers(neurons):
         else:
             layer_activation = 'sigmoid'
 
-        layers_binary.append({'W': numpy.array(W,dtype=theano.config.floatX),
-                              'b': numpy.array(b,dtype=theano.config.floatX),
+        layers_binary.append({'W': numpy.array(W, dtype=theano.config.floatX),
+                              'b': numpy.array(b, dtype=theano.config.floatX),
                               'activation': layer_activation})
         layer_counter += 1
     return layers_binary, layer_counter
+
 
 def main(nn_type, architecture, model_file):
     """Create a neural network file of ``nn_type`` with ``architecture``.

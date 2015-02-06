@@ -65,6 +65,7 @@ Current State
     2015-01-29, 1061,   86, 56%, 9.21,          362/595,     2, minor
     2015-01-29, 1139,   86, 56%, 9.22,          408/595,     2, minor (and fixed pylint for cheesecake_index)
     2015-01-31, 1333,  181, 56%, 9.26,          408/595,     2, minor (removed star-argument)
+    2015-02-06, 1235,  164, 58%, 9.17,          408/595,     2, minor
 
 
 Pylint messages
@@ -78,6 +79,8 @@ not need any attention is
 ::
 
     $ pylint nntoolkit
+    ************* Module nntoolkit.activation_functions
+    W: 12,20: Unused argument 'config_key' (unused-argument)
     ************* Module nntoolkit.evaluate
     W: 13, 4: Redefining built-in 'open' (redefined-builtin)
     ************* Module nntoolkit.test
@@ -85,25 +88,31 @@ not need any attention is
     W: 46, 4: Attempting to unpack a non-sequence defined at line 146 of nntoolkit.utils (unpacking-non-sequence)
     W: 46, 4: Attempting to unpack a non-sequence defined at line 152 of nntoolkit.utils (unpacking-non-sequence)
     ************* Module nntoolkit.create
-    W: 61, 0: TODO: the activation function could be here! (fixme)
-    W: 75, 0: TODO: parse architecture string to allow arbitrary activation (fixme)
-    R: 39, 0: Too many local variables (26/15) (too-many-locals)
-    W: 72,21: Unused variable 'j' (unused-variable)
+    W: 87, 0: TODO: parse architecture string to allow arbitrary activation (fixme)
+    W:121, 0: TODO: the activation function could be here! (fixme)
+    C: 39, 0: Missing function docstring (missing-docstring)
+    W: 46,13: Unused variable 'j' (unused-variable)
+    C: 50, 0: Missing function docstring (missing-docstring)
+    C: 59, 0: Missing function docstring (missing-docstring)
+    C: 71, 0: Missing function docstring (missing-docstring)
+    C: 81, 0: Missing function docstring (missing-docstring)
+    W: 86,33: Unused variable 'i' (unused-variable)
+    W:124,23: Unused variable 'layer_counter' (unused-variable)
     ************* Module nntoolkit.train
     W:102, 0: TODO: Sigmoid - make dependant from activation function (fixme)
-    W:130, 0: TODO: Eventually we miss training examples! (fixme)
+    W:131, 0: TODO: Eventually we miss training examples! (fixme)
     R: 61, 0: Too many arguments (6/5) (too-many-arguments)
     R: 61, 0: Too many local variables (30/15) (too-many-locals)
     E:103, 8: Assigning to function call which doesn't return (assignment-from-no-return)
-    R:138, 0: Too many arguments (6/5) (too-many-arguments)
-    W:149, 4: Attempting to unpack a non-sequence defined at line 142 of nntoolkit.utils (unpacking-non-sequence)
-    W:149, 4: Attempting to unpack a non-sequence defined at line 146 of nntoolkit.utils (unpacking-non-sequence)
-    W:149, 4: Attempting to unpack a non-sequence defined at line 152 of nntoolkit.utils (unpacking-non-sequence)
+    R:139, 0: Too many arguments (6/5) (too-many-arguments)
+    W:150, 4: Attempting to unpack a non-sequence defined at line 142 of nntoolkit.utils (unpacking-non-sequence)
+    W:150, 4: Attempting to unpack a non-sequence defined at line 146 of nntoolkit.utils (unpacking-non-sequence)
+    W:150, 4: Attempting to unpack a non-sequence defined at line 152 of nntoolkit.utils (unpacking-non-sequence)
     ************* Module nntoolkit.utils
-    W: 22, 4: Redefining built-in 'open' (redefined-builtin)
-    R: 68, 0: Too many local variables (17/15) (too-many-locals)
+    W: 23, 4: Redefining built-in 'open' (redefined-builtin)
+    C: 60, 0: Missing function docstring (missing-docstring)
     W:121, 9: Used * or ** magic (star-args)
-    R:169, 0: Too many local variables (17/15) (too-many-locals)
+    C:169, 0: Missing function docstring (missing-docstring)
     R:  1, 0: Similar lines in 2 files
     ==nntoolkit.evaluate:15
     ==nntoolkit.train:13
@@ -140,7 +149,7 @@ not need any attention is
 
     Report
     ======
-    376 statements analysed.
+    422 statements analysed.
 
     Statistics by type
     ------------------
@@ -148,13 +157,13 @@ not need any attention is
     +---------+-------+-----------+-----------+------------+---------+
     |type     |number |old number |difference |%documented |%badname |
     +=========+=======+===========+===========+============+=========+
-    |module   |6      |6          |=          |100.00      |0.00     |
+    |module   |7      |6          |+1.00      |100.00      |0.00     |
     +---------+-------+-----------+-----------+------------+---------+
-    |class    |0      |0          |=          |0           |0        |
+    |class    |2      |0          |+2.00      |100.00      |0.00     |
     +---------+-------+-----------+-----------+------------+---------+
-    |method   |0      |0          |=          |0           |0        |
+    |method   |6      |0          |+6.00      |100.00      |0.00     |
     +---------+-------+-----------+-----------+------------+---------+
-    |function |20     |20         |=          |100.00      |0.00     |
+    |function |28     |20         |+8.00      |75.00       |0.00     |
     +---------+-------+-----------+-----------+------------+---------+
 
 
@@ -167,8 +176,9 @@ not need any attention is
           \-builtins (nntoolkit.utils,nntoolkit.evaluate)
         h5py (nntoolkit.create,nntoolkit.utils)
         nntoolkit 
+          \-activation_functions (nntoolkit.utils)
           \-evaluate (nntoolkit.test)
-        numpy (nntoolkit.create,nntoolkit.utils,nntoolkit.train,nntoolkit.test,nntoolkit.evaluate)
+        numpy (nntoolkit.activation_functions,nntoolkit.create,nntoolkit.train,nntoolkit.test,nntoolkit.evaluate)
         pkg_resources (nntoolkit)
         theano (nntoolkit.create,nntoolkit.train)
           \-tensor (nntoolkit.train)
@@ -182,13 +192,13 @@ not need any attention is
     +----------+-------+------+---------+-----------+
     |type      |number |%     |previous |difference |
     +==========+=======+======+=========+===========+
-    |code      |474    |69.71 |474      |=          |
+    |code      |524    |67.70 |474      |+50.00     |
     +----------+-------+------+---------+-----------+
-    |docstring |103    |15.15 |103      |=          |
+    |docstring |117    |15.12 |103      |+14.00     |
     +----------+-------+------+---------+-----------+
-    |comment   |40     |5.88  |40       |=          |
+    |comment   |57     |7.36  |40       |+17.00     |
     +----------+-------+------+---------+-----------+
-    |empty     |63     |9.26  |63       |=          |
+    |empty     |76     |9.82  |63       |+13.00     |
     +----------+-------+------+---------+-----------+
 
 
@@ -201,7 +211,7 @@ not need any attention is
     +=========================+======+=========+===========+
     |nb duplicated lines      |23    |23       |=          |
     +-------------------------+------+---------+-----------+
-    |percent duplicated lines |3.096 |3.096    |=          |
+    |percent duplicated lines |2.687 |3.096    |-0.41      |
     +-------------------------+------+---------+-----------+
 
 
@@ -212,11 +222,11 @@ not need any attention is
     +-----------+-------+---------+-----------+
     |type       |number |previous |difference |
     +===========+=======+=========+===========+
-    |convention |0      |0        |=          |
+    |convention |7      |0        |+7.00      |
     +-----------+-------+---------+-----------+
-    |refactor   |9      |9        |=          |
+    |refactor   |6      |9        |-3.00      |
     +-----------+-------+---------+-----------+
-    |warning    |14     |14       |=          |
+    |warning    |17     |14       |+3.00      |
     +-----------+-------+---------+-----------+
     |error      |1      |1        |=          |
     +-----------+-------+---------+-----------+
@@ -226,19 +236,21 @@ not need any attention is
     % errors / warnings by module
     -----------------------------
 
-    +-------------------+-------+--------+---------+-----------+
-    |module             |error  |warning |refactor |convention |
-    +===================+=======+========+=========+===========+
-    |nntoolkit.train    |100.00 |35.71   |33.33    |0.00       |
-    +-------------------+-------+--------+---------+-----------+
-    |nntoolkit.create   |0.00   |21.43   |11.11    |0.00       |
-    +-------------------+-------+--------+---------+-----------+
-    |nntoolkit.test     |0.00   |21.43   |0.00     |0.00       |
-    +-------------------+-------+--------+---------+-----------+
-    |nntoolkit.utils    |0.00   |14.29   |55.56    |0.00       |
-    +-------------------+-------+--------+---------+-----------+
-    |nntoolkit.evaluate |0.00   |7.14    |0.00     |0.00       |
-    +-------------------+-------+--------+---------+-----------+
+    +-------------------------------+-------+--------+---------+-----------+
+    |module                         |error  |warning |refactor |convention |
+    +===============================+=======+========+=========+===========+
+    |nntoolkit.train                |100.00 |29.41   |50.00    |0.00       |
+    +-------------------------------+-------+--------+---------+-----------+
+    |nntoolkit.create               |0.00   |29.41   |0.00     |71.43      |
+    +-------------------------------+-------+--------+---------+-----------+
+    |nntoolkit.test                 |0.00   |17.65   |0.00     |0.00       |
+    +-------------------------------+-------+--------+---------+-----------+
+    |nntoolkit.utils                |0.00   |11.76   |50.00    |28.57      |
+    +-------------------------------+-------+--------+---------+-----------+
+    |nntoolkit.evaluate             |0.00   |5.88    |0.00     |0.00       |
+    +-------------------------------+-------+--------+---------+-----------+
+    |nntoolkit.activation_functions |0.00   |5.88    |0.00     |0.00       |
+    +-------------------------------+-------+--------+---------+-----------+
 
 
 
@@ -248,11 +260,13 @@ not need any attention is
     +--------------------------+------------+
     |message id                |occurrences |
     +==========================+============+
+    |missing-docstring         |7           |
+    +--------------------------+------------+
     |unpacking-non-sequence    |6           |
     +--------------------------+------------+
-    |too-many-locals           |4           |
-    +--------------------------+------------+
     |fixme                     |4           |
+    +--------------------------+------------+
+    |unused-variable           |3           |
     +--------------------------+------------+
     |duplicate-code            |3           |
     +--------------------------+------------+
@@ -260,7 +274,9 @@ not need any attention is
     +--------------------------+------------+
     |redefined-builtin         |2           |
     +--------------------------+------------+
-    |unused-variable           |1           |
+    |unused-argument           |1           |
+    +--------------------------+------------+
+    |too-many-locals           |1           |
     +--------------------------+------------+
     |star-args                 |1           |
     +--------------------------+------------+
@@ -271,7 +287,7 @@ not need any attention is
 
     Global evaluation
     -----------------
-    Your code has been rated at 9.26/10 (previous run: 9.26/10, +0.00)
+    Your code has been rated at 9.17/10 (previous run: 9.26/10, -0.08)
 
 
 
