@@ -19,7 +19,16 @@ Contents:
    create
    train
    evaluate
+   test
 
+
+Code:
+
+.. toctree::
+   :maxdepth: 2
+
+   activation_functions
+   utils
 
 
 Indices and tables

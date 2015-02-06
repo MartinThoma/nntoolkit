@@ -83,8 +83,10 @@ def check_and_create_model(modelfile):
 
 def get_model(modelfile):
     """Check if ``modelfile`` is valid.
+
     :param modelfile: path to a model.tar file which describes a neural
         network.
+
     :returns: A dictionary which describes the model if everything seems to be
         fine. Return ``False`` if errors occur.
     """
@@ -133,9 +135,11 @@ def get_model(modelfile):
 
 def get_data(data_file):
     """Get data as x and y numpy arrays for a tar archive.
-    :param training_data: The path to a tar file
+
+    :param training_data: The path to a tar file.
+
     :returns: Tuple (x, y), where y might be ``None`` in case of success or
-              ``False`` in case of error
+        ``False`` in case of error
     """
     if not os.path.isfile(data_file):
         logging.error("File '%s' does not exist.", data_file)
@@ -166,7 +170,31 @@ def get_data(data_file):
     return (x, y)
 
 
-def create_csv_io_files(model):
+def create_boilerplate_semantics_files(neurons):
+    """Create boilerplate files which can contain semantic meaningful values.
+
+    :param neurons: A list which gives the number of neurons per layer. The
+        first value of this list is the number of input neurons, the last value
+        is the number of output neurons.
+    """
+    # Create and add input_semantics.csv
+    with open("input_semantics.csv", 'w') as f:
+        for i in range(neurons[0]):
+            f.write("input neuron %i\n" % i)
+
+    # Create and add output_semantics.csv
+    with open("output_semantics.csv", 'w') as f:
+        for i in range(neurons[-1]):
+            f.write("output neuron %i\n" % i)
+
+
+def create_semantics_files(model):
+    """Create semantic input and output files which can contain semantic
+    meaningful values.
+
+    :param model: A neural network model
+    :type model: dict
+    """
     # input_semantics
     with open("input_semantics.csv", 'wb') as csvfile:
         spamwriter = csv.writer(csvfile,
@@ -188,11 +216,12 @@ def create_csv_io_files(model):
 
 def write_model(model, model_file_path):
     """Write ``model`` to ``model_file_path``.
+
     :returns: False if it failed.
     """
     model_yml = {}
     model_yml['type'] = 'mlp'
-    create_csv_io_files(model)
+    create_semantics_files(model)
 
     logging.info("Create %s...", model_yml['type'])
 

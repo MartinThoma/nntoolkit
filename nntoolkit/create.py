@@ -12,6 +12,9 @@ import h5py
 import numpy
 import theano
 
+# nntoolkit modules
+from nntoolkit import utils
+
 
 def get_parser():
     """Return the parser object for this script."""
@@ -37,38 +40,36 @@ def get_parser():
 
 
 def xaviar10_weight_init(neurons_a, neurons_b):
+    """Initialize the weights between a layer with ``neurons_a`` neurons
+    and a layer with ``neurons_b`` neurons.
+
+    :returns: A neurons_a × neurons_b matrix.
+    """
     fan_in = neurons_a
     fan_out = neurons_b - 2
     init_weight = 4.0*numpy.sqrt(6.0/(fan_in+fan_out))
     W = [numpy.random.uniform(low=-init_weight,
                               high=init_weight,
                               size=neurons_a)
-         for j in range(neurons_b)]
+         for _ in range(neurons_b)]
     return W
 
 
-def file_validate(model_file):
-    if os.path.isfile(model_file):
-        logging.error("'%s' already exists.", model_file)
-        raise IOError
-    if not model_file.endswith(".tar"):
-        logging.error("'%s' does not end with '.tar'.", model_file)
-        raise IOError
+def is_valid_model_file(model_file_path):
+    """Check if ``model_file_path`` is a valid model file."""
+    if os.path.isfile(model_file_path):
+        logging.error("'%s' already exists.", model_file_path)
+        return False
+    if not model_file_path.endswith(".tar"):
+        logging.error("'%s' does not end with '.tar'.", model_file_path)
+        return False
+    return True
 
 
-def create_semantics_io_files(neurons):
-    # Create and add input_semantics.csv
-    with open("input_semantics.csv", 'w') as f:
-        for i in range(neurons[0]):
-            f.write("input neuron %i\n" % i)
-
-    # Create and add output_semantics.csv
-    with open("output_semantics.csv", 'w') as f:
-        for i in range(neurons[-1]):
-            f.write("output neuron %i\n" % i)
-
-
-def hdf5_file_write(i, layer):
+def create_hdf5s_for_layer(i, layer):
+    """Create one HDF5 file for the weight matrix W and one for the bias vector
+    b.
+    """
     Wfile = h5py.File('W%i.hdf5' % i, 'w')
     Wfile.create_dataset(Wfile.id.name, data=layer['W'])
     Wfile.close()
@@ -79,35 +80,36 @@ def hdf5_file_write(i, layer):
 
 
 def create_layers(neurons):
-    layer_counter = 0
+    """Create the layers of the neural network.
+
+    :param neurons: A list of integers which indicates how many neurons are in
+        which layer
+
+    :returns: a list of dictionaries with random variables for the weight
+        matrix W and the bias vector b
+    """
     layers_binary = []
     for neurons_b, neurons_a in zip(neurons, neurons[1:]):
         W = xaviar10_weight_init(neurons_a, neurons_b)
-        b = [random.random() for i in range(neurons_a)]
+        b = [random.random() for _ in range(neurons_a)]
         # TODO: parse architecture string to allow arbitrary activation
         # functions
-        if layer_counter + 2 == len(neurons):
-            layer_activation = 'softmax'
-        else:
-            layer_activation = 'sigmoid'
-
         layers_binary.append({'W': numpy.array(W, dtype=theano.config.floatX),
                               'b': numpy.array(b, dtype=theano.config.floatX),
-                              'activation': layer_activation})
-        layer_counter += 1
-    return layers_binary, layer_counter
+                              'activation': 'Sigmoid'})
+    layers_binary[-1]['activation'] = 'Softmax'
+    return layers_binary
 
 
 def main(nn_type, architecture, model_file):
     """Create a neural network file of ``nn_type`` with ``architecture``.
-       Store it in ``model_file``.
-       :param nn_type: A string, e.g. 'mlp'
-       :param model_file: A path which should end with .tar. The created model
-       will be written there.
+    Store it in ``model_file``.
+
+    :param nn_type: A string, e.g. 'mlp'
+    :param model_file: A path which should end with .tar. The created model
+        will be written there.
     """
-    try:
-        file_validate(model_file)
-    except IOError:
+    if not is_valid_model_file(model_file):
         return
 
     logging.info("Create %s with a %s architecture...", nn_type, architecture)
@@ -121,15 +123,15 @@ def main(nn_type, architecture, model_file):
         # TODO: the activation function could be here!
         neurons = list(map(int, architecture.split(':')))
 
-        layers_binary, layer_counter = create_layers(neurons)
+        layers_binary = create_layers(neurons)
 
-        create_semantics_io_files(neurons)
+        utils.create_boilerplate_semantics_files(neurons)
         filenames.append("input_semantics.csv")
         filenames.append("output_semantics.csv")
 
     # Write layers
     for i, layer in enumerate(layers_binary):
-        hdf5_file_write(i, layer)
+        create_hdf5s_for_layer(i, layer)
 
         layers.append({'W': {'size': list(layer['W'].shape),
                              'filename': 'W%i.hdf5' % i},

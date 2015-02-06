@@ -38,7 +38,7 @@ def get_parser():
 
 
 def show_results(results, n=10, print_results=True):
-    """Show the TOP n results of a classification."""
+    """Show the top-n results of a classification."""
     # Print headline
     s = ""
     if len(results) == 0:
@@ -78,8 +78,9 @@ def get_results(model_output, output_semantics):
     """
     :param model_output: A list of probabilities
     :param output_semantics: A list of semantics
+
     :returns: A list of dictionaries which have probability and semantics as
-    keys.
+        keys.
     """
     results = []
     for symbolnr, prob in enumerate(model_output):
@@ -92,7 +93,7 @@ def get_results(model_output, output_semantics):
 
 def main(modelfile, features, print_results=True):
     """Evaluate the model described in ``modelfile`` with ``inputvec`` as
-       input data.
+    input data.
 
     :param features: List of floats
     :param print_results: Print results if True. Always return results.

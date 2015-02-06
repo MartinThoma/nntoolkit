@@ -40,11 +40,13 @@ def get_class(name, config_key, module):
 
 
 def get_activation_function(function_name):
-    """Get features from a list of dictionaries
+    """Get an activation function object by its class name.
 
-    >>> function_name = 'sigmoid'
-    >>> get_activation_function(function_name)
+    >>> get_activation_function('Sigmoid')
     SigmoidFunction
+
+    :param function_name: Name of the activation function
+    :type function_name: str
     """
     return get_class(name=function_name,
                      config_key='activation-functions',
@@ -56,7 +58,7 @@ def get_activation_function(function_name):
 # __call__ functions
 class Sigmoid(object):
 
-    """The sigmoid function f(x) = 1/(1+e^{-x})."""
+    """The sigmoid function :math:`f(x) = 1/(1+e^{-x})`."""
 
     def __repr__(self):
         return "Sigmoid"
