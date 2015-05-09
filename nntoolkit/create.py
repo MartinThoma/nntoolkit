@@ -43,7 +43,9 @@ def xaviar10_weight_init(neurons_a, neurons_b):
     """Initialize the weights between a layer with ``neurons_a`` neurons
     and a layer with ``neurons_b`` neurons.
 
-    :returns: A neurons_a × neurons_b matrix.
+    Returns
+    -------
+    A neurons_a × neurons_b matrix.
     """
     fan_in = neurons_a
     fan_out = neurons_b - 2
@@ -56,7 +58,7 @@ def xaviar10_weight_init(neurons_a, neurons_b):
 
 
 def is_valid_model_file(model_file_path):
-    """Check if ``model_file_path`` is a valid model file."""
+    """Check if `model_file_path` is a valid model file."""
     if os.path.isfile(model_file_path):
         logging.error("'%s' already exists.", model_file_path)
         return False
@@ -82,11 +84,15 @@ def create_hdf5s_for_layer(i, layer):
 def create_layers(neurons):
     """Create the layers of the neural network.
 
-    :param neurons: A list of integers which indicates how many neurons are in
-        which layer
+    Parameters
+    ----------
+    neurons : list of integers
+        Indicates how many neurons are in which layer.
 
-    :returns: a list of dictionaries with random variables for the weight
-        matrix W and the bias vector b
+    Returns
+    -------
+    list of dictionaries :
+        random variables for the weight matrix W and the bias vector b
     """
     layers_binary = []
     for neurons_b, neurons_a in zip(neurons, neurons[1:]):
@@ -105,9 +111,13 @@ def main(nn_type, architecture, model_file):
     """Create a neural network file of ``nn_type`` with ``architecture``.
     Store it in ``model_file``.
 
-    :param nn_type: A string, e.g. 'mlp'
-    :param model_file: A path which should end with .tar. The created model
-        will be written there.
+    Parameters
+    ----------
+    nn_type : string
+        e.g. 'mlp'
+    model_file :
+        A path which should end with .tar. The created model will be written
+        there.
     """
     if not is_valid_model_file(model_file):
         return

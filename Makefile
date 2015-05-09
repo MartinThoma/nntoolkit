@@ -1,9 +1,12 @@
 docs:
 	python setup.py upload_docs --upload-dir docs/_build/html
 
+localinstall:
+	sudo -H python setup.py install
+
 update:
 	python setup.py sdist upload --sign
-	sudo pip install nntoolkit --upgrade
+	sudo -H pip install nntoolkit --upgrade
 
 test:
 	nosetests --with-coverage --cover-erase --cover-package nntoolkit --logging-level=INFO --cover-html
@@ -20,3 +23,12 @@ countc:
 
 countt:
 	cloc tests
+
+clean:
+	rm -f *.hdf5 *.yml *.csv
+	find . -name "*.pyc" -exec rm -rf {} \;
+	find . -type d -name "__pycache__" -delete
+	sudo rm -rf build
+	sudo rm -rf cover
+	sudo rm -rf dist
+	sudo rm -rf nntoolkit.egg-info

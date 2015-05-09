@@ -61,9 +61,15 @@ def show_results(results, n=10, print_results=True):
 
 def get_model_output(model, x):
     """
-    :param model: A dictionary which represents a model
-    :param x: An input vector
-    :returns: The output vector of the model
+    Parameters
+    ----------
+    model : dict
+        represents a model
+    x : An input vector
+
+    Returns
+    -------
+    The output vector of the model
     """
     if model['type'] == 'mlp':
         for layer in model['layers']:
@@ -76,11 +82,16 @@ def get_model_output(model, x):
 
 def get_results(model_output, output_semantics):
     """
-    :param model_output: A list of probabilities
-    :param output_semantics: A list of semantics
+    Parameters
+    ----------
+    model_output : list
+        A list of probabilities
+    output_semantics : list
+        A list of semantics
 
-    :returns: A list of dictionaries which have probability and semantics as
-        keys.
+    Returns
+    -------
+    A list of dictionaries which have probability and semantics as keys.
     """
     results = []
     for symbolnr, prob in enumerate(model_output):
@@ -95,9 +106,15 @@ def main(modelfile, features, print_results=True):
     """Evaluate the model described in ``modelfile`` with ``inputvec`` as
     input data.
 
-    :param features: List of floats
-    :param print_results: Print results if True. Always return results.
-    :returns: List of possible answers, reverse-sorted by probability.
+    Parameters
+    ----------
+    features : list of floats
+    print_results : bool
+        Print results if True. Always return results.
+
+    Returns
+    -------
+    List of possible answers, reverse-sorted by probability.
     """
     model = utils.get_model(modelfile)
     if not model:
@@ -115,9 +132,17 @@ def main_bash(modelfile, inputvec_file, print_results=True):
     """Evaluate the model described in ``modelfile`` with ``inputvec_file`` as
        input data.
 
-    :param inputvec_file: File with json content. The content is a list with
-        one list as element. This list contains floats.
-    :param print_results: Print results if True. Always return results.
+    Parameters
+    ----------
+    inputvec_file :
+        File with json content. The content is a list with one list as element.
+        This list contains floats.
+    print_results : bool
+        Print results if True.
+
+    Returns
+    -------
+    results
     """
     features = json.load(open(inputvec_file))
     return main(modelfile, features, print_results)

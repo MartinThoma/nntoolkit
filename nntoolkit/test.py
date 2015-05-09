@@ -34,9 +34,17 @@ def get_parser():
 
 def main(model_file, test_data, verbose=True):
     """ Evaluate a model
-    :param model_file: Path to a model file
-    :param test_data: Path to a testdata.tar file
-    :returns: Testing results
+
+    Parameters
+    ----------
+    model_file : string
+        Path to a model file
+    test_data : string
+        Path to a testdata.tar file
+
+    Returns
+    -------
+    Testing results
     """
     model = utils.get_model(model_file)
     data = utils.get_data(test_data)

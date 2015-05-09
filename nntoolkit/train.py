@@ -66,12 +66,16 @@ def minibatch_gradient_descent(model,
                                epochs=100):
     """Train a given neural network.
 
-    :param model: A parsed model
-    :param x: A numpy array with features
-    :param y: The list of classes
-    :param batch_size: A positive integer which defines after how many training
-        examples the values of the neural network get adjusted
-    :param lr: Learning rate. Has to be positive.
+    Parameters
+    ----------
+    model : A parsed model
+    x : A numpy array with features
+    y : The list of classes
+    batch_size : positive integer
+        Defines after how many training examples the values of the neural
+        network get adjusted
+    lr : positive float
+        Learning rate
     """
     assert lr > 0
     assert batch_size >= 1

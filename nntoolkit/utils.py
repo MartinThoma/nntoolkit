@@ -84,11 +84,16 @@ def check_and_create_model(modelfile):
 def get_model(modelfile):
     """Check if ``modelfile`` is valid.
 
-    :param modelfile: path to a model.tar file which describes a neural
-        network.
+    Parameters
+    ----------
+    modelfile : string
+        path to a model.tar file which describes a neural network.
 
-    :returns: A dictionary which describes the model if everything seems to be
-        fine. Return ``False`` if errors occur.
+    Returns
+    -------
+    dict :
+        describes the model if everything seems to be fine. Return `False` if
+        errors occur.
     """
     tarfolder = check_and_create_model(modelfile)
     if not tarfolder:
@@ -136,10 +141,14 @@ def get_model(modelfile):
 def get_data(data_file):
     """Get data as x and y numpy arrays for a tar archive.
 
-    :param training_data: The path to a tar file.
+    Parameters
+    ----------
+    training_data : The path to a tar file.
 
-    :returns: Tuple (x, y), where y might be ``None`` in case of success or
-        ``False`` in case of error
+    Returns
+    -------
+    Tuple (x, y), where y might be `None` in case of success or `False` in case
+    of error
     """
     if not os.path.isfile(data_file):
         logging.error("File '%s' does not exist.", data_file)
@@ -173,7 +182,9 @@ def get_data(data_file):
 def create_boilerplate_semantics_files(neurons):
     """Create boilerplate files which can contain semantic meaningful values.
 
-    :param neurons: A list which gives the number of neurons per layer. The
+    Parameters
+    ----------
+    neurons : A list which gives the number of neurons per layer. The
         first value of this list is the number of input neurons, the last value
         is the number of output neurons.
     """
@@ -192,8 +203,10 @@ def create_semantics_files(model):
     """Create semantic input and output files which can contain semantic
     meaningful values.
 
-    :param model: A neural network model
-    :type model: dict
+    Parameters
+    ----------
+    model : dict
+        A neural network model
     """
     # input_semantics
     with open("input_semantics.csv", 'wb') as csvfile:
@@ -217,7 +230,9 @@ def create_semantics_files(model):
 def write_model(model, model_file_path):
     """Write ``model`` to ``model_file_path``.
 
-    :returns: False if it failed.
+    Returns
+    -------
+    False if it failed.
     """
     model_yml = {}
     model_yml['type'] = 'mlp'

@@ -12,9 +12,14 @@ import inspect
 def get_class(name, config_key, module):
     """Get the class by its name as a string.
 
-    :param name: name of the class
-    :param config_key: name of the config key (if any) for the path to a plugin
-    :param module: Module where to look for classes
+    Parameters
+    ----------
+    name : string
+        Name of the class
+    config_key : string
+        Name of the config key (if any) for the path to a plugin
+    module :
+        Module where to look for classes
     """
     clsmembers = inspect.getmembers(module, inspect.isclass)
     for string_name, act_class in clsmembers:
@@ -42,11 +47,15 @@ def get_class(name, config_key, module):
 def get_activation_function(function_name):
     """Get an activation function object by its class name.
 
+    Parameters
+    ----------
+    function_name : string
+        Name of the activation function.
+
+    Examples
+    --------
     >>> get_activation_function('Sigmoid')
     SigmoidFunction
-
-    :param function_name: Name of the activation function
-    :type function_name: str
     """
     return get_class(name=function_name,
                      config_key='activation-functions',

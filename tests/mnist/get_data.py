@@ -23,9 +23,15 @@ from numpy import zeros, uint8
 def get_labeled_data(imagefile, labelfile):
     """Read input-vector (image) and target class (label, 0-9) and return
        it as list of tuples.
-    :param imagefile: The file which contains the pixel information
-    :param labelfile: The file which contains the labels
-    :returns: (xs, ys)
+
+    Parameters
+    ----------
+    imagefile : The file which contains the pixel information
+    labelfile : The file which contains the labels
+
+    Returns
+    -------
+    (xs, ys)
     """
     # Open the images with gzip in read binary mode
     images = gzip.open(imagefile, 'rb')

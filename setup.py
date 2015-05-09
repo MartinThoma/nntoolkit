@@ -20,7 +20,7 @@ config = {
     'cmdclass': {'build_txt': build_ext},  # numpy hack
     'setup_requires': ['numpy'],           # numpy hack
     'name': 'nntoolkit',
-    'version': '0.1.28',
+    'version': '0.1.29',
     'author': 'Martin Thoma',
     'author_email': 'info@martin-thoma.de',
     'maintainer': 'Martin Thoma',
