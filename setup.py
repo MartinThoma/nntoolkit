@@ -1,4 +1,6 @@
 from setuptools.command.build_ext import build_ext as _build_ext
+import io
+import os
 
 try:
     from setuptools import setup
@@ -16,11 +18,18 @@ class build_ext(_build_ext):
         self.include_dirs.append(numpy.get_include())
 
 
+def read(file_name):
+    """Read a text file and return the content as a string."""
+    with io.open(os.path.join(os.path.dirname(__file__), file_name),
+                 encoding='utf-8') as f:
+        return f.read()
+
+
 config = {
     'cmdclass': {'build_txt': build_ext},  # numpy hack
     'setup_requires': ['numpy'],           # numpy hack
     'name': 'nntoolkit',
-    'version': '0.1.29',
+    'version': '0.1.30',
     'author': 'Martin Thoma',
     'author_email': 'info@martin-thoma.de',
     'maintainer': 'Martin Thoma',
@@ -31,11 +40,8 @@ config = {
     'url': 'https://github.com/MartinThoma/nntoolkit',
     'license': 'MIT',
     'description': 'Neural Network Toolkit',
-    'long_description': ("A tookit for training feed-forward neural networks. "
-                         "nntoolkit is designed to be used from both, "
-                         "within Python scripts and from the shell. "
-                         "See http://pythonhosted.org/nntoolkit/ for the "
-                         "documentation."),
+    'long_description': read('README.md'),
+    'long_description_content_type': 'text/markdown',
     'install_requires': [
         "argparse",
         "theano",
@@ -48,7 +54,7 @@ config = {
     ],
     'keywords': ['Neural Networks', 'Feed-Forward', 'NN', 'MLP'],
     'download_url': 'https://github.com/MartinThoma/nntoolkit',
-    'classifiers': ['Development Status :: 3 - Alpha',
+    'classifiers': ['Development Status :: 7 - Inactive',
                     'Environment :: Console',
                     'Intended Audience :: Developers',
                     'Intended Audience :: Science/Research',

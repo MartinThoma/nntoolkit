@@ -4,9 +4,9 @@ docs:
 localinstall:
 	sudo -H python setup.py install
 
-update:
-	python setup.py sdist upload --sign
-	sudo -H pip install nntoolkit --upgrade
+upload:
+	make clean
+	python3 setup.py sdist bdist_wheel && twine upload dist/*
 
 test:
 	nosetests --with-coverage --cover-erase --cover-package nntoolkit --logging-level=INFO --cover-html

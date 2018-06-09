@@ -6,6 +6,5 @@
 nntoolkit
 =========
 
-Toolkit to train neural networks
-
-See [Deep Learning Tutorials](http://deeplearning.net/tutorial/).
+A tookit for training feed-forward neural networks.  nntoolkit is designed to
+be used from both, within Python scripts and from the shell.
