@@ -29,7 +29,7 @@ def simple_evluation_test():
     evaluate.main(model_file, features)
 
     # Test the bash version
-    fd, feature_file = tempfile.mkstemp('.json')
+    fd, feature_file = tempfile.mkstemp(".json")
     with open(feature_file, "w") as outfile:
         json.dump(features, outfile)
     evaluate.main_bash(model_file, feature_file)

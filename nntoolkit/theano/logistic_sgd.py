@@ -34,7 +34,7 @@ References:
                  Christopher M. Bishop, section 4.3.2
 
 """
-__docformat__ = 'restructedtext en'
+__docformat__ = "restructedtext en"
 
 import cPickle
 import gzip
@@ -76,21 +76,15 @@ class LogisticRegression(object):
         # start-snippet-1
         # initialize with 0 the weights W as a matrix of shape (n_in, n_out)
         self.W = theano.shared(
-            value=numpy.zeros(
-                (n_in, n_out),
-                dtype=theano.config.floatX
-            ),
-            name='W',
-            borrow=True
+            value=numpy.zeros((n_in, n_out), dtype=theano.config.floatX),
+            name="W",
+            borrow=True,
         )
         # initialize the baises b as a vector of n_out 0s
         self.b = theano.shared(
-            value=numpy.zeros(
-                (n_out,),
-                dtype=theano.config.floatX
-            ),
-            name='b',
-            borrow=True
+            value=numpy.zeros((n_out,), dtype=theano.config.floatX),
+            name="b",
+            borrow=True,
         )
 
         # symbolic expression for computing the matrix of class-membership
@@ -156,11 +150,11 @@ class LogisticRegression(object):
         # check if y has same dimension of y_pred
         if y.ndim != self.y_pred.ndim:
             raise TypeError(
-                'y should have the same shape as self.y_pred',
-                ('y', y.type, 'y_pred', self.y_pred.type)
+                "y should have the same shape as self.y_pred",
+                ("y", y.type, "y_pred", self.y_pred.type),
             )
         # check if y is of the correct datatype
-        if y.dtype.startswith('int'):
+        if y.dtype.startswith("int"):
             # the T.neq operator returns a vector of 0s and 1s, where 1
             # represents a mistake in prediction
             return T.mean(T.neq(self.y_pred, y))
@@ -169,11 +163,11 @@ class LogisticRegression(object):
 
 
 def load_data(dataset):
-    ''' Loads the dataset
+    """ Loads the dataset
 
     :type dataset: string
     :param dataset: the path to the dataset (here MNIST)
-    '''
+    """
 
     #############
     # LOAD DATA #
@@ -183,45 +177,39 @@ def load_data(dataset):
     data_dir, data_file = os.path.split(dataset)
     if data_dir == "" and not os.path.isfile(dataset):
         # Check if dataset is in the data directory.
-        new_path = os.path.join(
-            os.path.split(__file__)[0],
-            "..",
-            "data",
-            dataset
-        )
-        if os.path.isfile(new_path) or data_file == 'mnist.pkl.gz':
+        new_path = os.path.join(os.path.split(__file__)[0], "..", "data", dataset)
+        if os.path.isfile(new_path) or data_file == "mnist.pkl.gz":
             dataset = new_path
 
-    if (not os.path.isfile(dataset)) and data_file == 'mnist.pkl.gz':
+    if (not os.path.isfile(dataset)) and data_file == "mnist.pkl.gz":
         import urllib
-        origin = (
-            'http://www.iro.umontreal.ca/~lisa/deep/data/mnist/mnist.pkl.gz'
-        )
-        print 'Downloading data from %s' % origin
+
+        origin = "http://www.iro.umontreal.ca/~lisa/deep/data/mnist/mnist.pkl.gz"
+        print "Downloading data from %s" % origin
         urllib.urlretrieve(origin, dataset)
 
-    print '... loading data'
+    print "... loading data"
 
     # Load the dataset
-    f = gzip.open(dataset, 'rb')
+    f = gzip.open(dataset, "rb")
     train_set, valid_set, test_set = cPickle.load(f)
 
     # Train_set is a tuple (x,y), where x is of shape (50000,784)
     # Write data to hdf5 file:
-    print("create datasets tar ...")
-    create_dataset_tar('train', train_set)
-    create_dataset_tar('test', test_set)
-    create_dataset_tar('valid', valid_set)
-    print("done")
+    print ("create datasets tar ...")
+    create_dataset_tar("train", train_set)
+    create_dataset_tar("test", test_set)
+    create_dataset_tar("valid", valid_set)
+    print ("done")
 
-    print(train_set[0][0].shape)
+    print (train_set[0][0].shape)
     f.close()
-    #train_set, valid_set, test_set format: tuple(input, target)
-    #input is an numpy.ndarray of 2 dimensions (a matrix)
-    #witch row's correspond to an example. target is a
-    #numpy.ndarray of 1 dimensions (vector)) that have the same length as
-    #the number of rows in the input. It should give the target
-    #target to the example with the same index in the input.
+    # train_set, valid_set, test_set format: tuple(input, target)
+    # input is an numpy.ndarray of 2 dimensions (a matrix)
+    # witch row's correspond to an example. target is a
+    # numpy.ndarray of 1 dimensions (vector)) that have the same length as
+    # the number of rows in the input. It should give the target
+    # target to the example with the same index in the input.
 
     def shared_dataset(data_xy, borrow=True):
         """ Function that loads the dataset into shared variables
@@ -233,12 +221,12 @@ def load_data(dataset):
         variable) would lead to a large decrease in performance.
         """
         data_x, data_y = data_xy
-        shared_x = theano.shared(numpy.asarray(data_x,
-                                               dtype=theano.config.floatX),
-                                 borrow=borrow)
-        shared_y = theano.shared(numpy.asarray(data_y,
-                                               dtype=theano.config.floatX),
-                                 borrow=borrow)
+        shared_x = theano.shared(
+            numpy.asarray(data_x, dtype=theano.config.floatX), borrow=borrow
+        )
+        shared_y = theano.shared(
+            numpy.asarray(data_y, dtype=theano.config.floatX), borrow=borrow
+        )
         # When storing data on the GPU it has to be stored as floats
         # therefore we will store the labels as ``floatX`` as well
         # (``shared_y`` does exactly that). But during our computations
@@ -246,20 +234,23 @@ def load_data(dataset):
         # floats it doesn't make sense) therefore instead of returning
         # ``shared_y`` we will have to cast it to int. This little hack
         # lets ous get around this issue
-        return shared_x, T.cast(shared_y, 'int32')
+        return shared_x, T.cast(shared_y, "int32")
 
     test_set_x, test_set_y = shared_dataset(test_set)
     valid_set_x, valid_set_y = shared_dataset(valid_set)
     train_set_x, train_set_y = shared_dataset(train_set)
 
-    rval = [(train_set_x, train_set_y), (valid_set_x, valid_set_y),
-            (test_set_x, test_set_y)]
+    rval = [
+        (train_set_x, train_set_y),
+        (valid_set_x, valid_set_y),
+        (test_set_x, test_set_y),
+    ]
     return rval
 
 
-def sgd_optimization_mnist(learning_rate=0.13, n_epochs=1000,
-                           dataset='mnist.pkl.gz',
-                           batch_size=600):
+def sgd_optimization_mnist(
+    learning_rate=0.13, n_epochs=1000, dataset="mnist.pkl.gz", batch_size=600
+):
     """
     Demonstrate stochastic gradient descent optimization of a log-linear
     model
@@ -292,15 +283,15 @@ def sgd_optimization_mnist(learning_rate=0.13, n_epochs=1000,
     ######################
     # BUILD ACTUAL MODEL #
     ######################
-    print '... building the model'
+    print "... building the model"
 
     # allocate symbolic variables for the data
     index = T.lscalar()  # index to a [mini]batch
 
     # generate symbolic variables for input (x and y represent a
     # minibatch)
-    x = T.matrix('x')  # data, presented as rasterized images
-    y = T.ivector('y')  # labels, presented as 1D vector of [int] labels
+    x = T.matrix("x")  # data, presented as rasterized images
+    y = T.ivector("y")  # labels, presented as 1D vector of [int] labels
 
     # construct the logistic regression class
     # Each MNIST image has size 28*28
@@ -316,18 +307,18 @@ def sgd_optimization_mnist(learning_rate=0.13, n_epochs=1000,
         inputs=[index],
         outputs=classifier.errors(y),
         givens={
-            x: test_set_x[index * batch_size: (index + 1) * batch_size],
-            y: test_set_y[index * batch_size: (index + 1) * batch_size]
-        }
+            x: test_set_x[index * batch_size : (index + 1) * batch_size],
+            y: test_set_y[index * batch_size : (index + 1) * batch_size],
+        },
     )
 
     validate_model = theano.function(
         inputs=[index],
         outputs=classifier.errors(y),
         givens={
-            x: valid_set_x[index * batch_size: (index + 1) * batch_size],
-            y: valid_set_y[index * batch_size: (index + 1) * batch_size]
-        }
+            x: valid_set_x[index * batch_size : (index + 1) * batch_size],
+            y: valid_set_y[index * batch_size : (index + 1) * batch_size],
+        },
     )
 
     # compute the gradient of cost with respect to theta = (W,b)
@@ -337,8 +328,10 @@ def sgd_optimization_mnist(learning_rate=0.13, n_epochs=1000,
     # start-snippet-3
     # specify how to update the parameters of the model as a list of
     # (variable, update expression) pairs.
-    updates = [(classifier.W, classifier.W - learning_rate * g_W),
-               (classifier.b, classifier.b - learning_rate * g_b)]
+    updates = [
+        (classifier.W, classifier.W - learning_rate * g_W),
+        (classifier.b, classifier.b - learning_rate * g_b),
+    ]
 
     # compiling a Theano function `train_model` that returns the cost, but in
     # the same time updates the parameter of the model based on the rules
@@ -348,30 +341,30 @@ def sgd_optimization_mnist(learning_rate=0.13, n_epochs=1000,
         outputs=cost,
         updates=updates,
         givens={
-            x: train_set_x[index * batch_size: (index + 1) * batch_size],
-            y: train_set_y[index * batch_size: (index + 1) * batch_size]
-        }
+            x: train_set_x[index * batch_size : (index + 1) * batch_size],
+            y: train_set_y[index * batch_size : (index + 1) * batch_size],
+        },
     )
     # end-snippet-3
 
     ###############
     # TRAIN MODEL #
     ###############
-    print '... training the model'
+    print "... training the model"
     # early-stopping parameters
     patience = 5000  # look as this many examples regardless
     patience_increase = 2  # wait this much longer when a new best is
-                                  # found
+    # found
     improvement_threshold = 0.995  # a relative improvement of this much is
-                                  # considered significant
+    # considered significant
     validation_frequency = min(n_train_batches, patience / 2)
-                                  # go through this many
-                                  # minibatche before checking the network
-                                  # on the validation set; in this case we
-                                  # check every epoch
+    # go through this many
+    # minibatche before checking the network
+    # on the validation set; in this case we
+    # check every epoch
 
     best_validation_loss = numpy.inf
-    test_score = 0.
+    test_score = 0.0
     start_time = time.clock()
 
     done_looping = False
@@ -386,44 +379,44 @@ def sgd_optimization_mnist(learning_rate=0.13, n_epochs=1000,
 
             if (iter + 1) % validation_frequency == 0:
                 # compute zero-one loss on validation set
-                validation_losses = [validate_model(i)
-                                     for i in xrange(n_valid_batches)]
+                validation_losses = [validate_model(i) for i in xrange(n_valid_batches)]
                 this_validation_loss = numpy.mean(validation_losses)
 
-                print(
-                    'epoch %i, minibatch %i/%i, validation error %f %%' %
-                    (
+                print (
+                    "epoch %i, minibatch %i/%i, validation error %f %%"
+                    % (
                         epoch,
                         minibatch_index + 1,
                         n_train_batches,
-                        this_validation_loss * 100.
+                        this_validation_loss * 100.0,
                     )
                 )
 
                 # if we got the best validation score until now
                 if this_validation_loss < best_validation_loss:
-                    #improve patience if loss improvement is good enough
-                    if this_validation_loss < best_validation_loss *  \
-                       improvement_threshold:
+                    # improve patience if loss improvement is good enough
+                    if (
+                        this_validation_loss
+                        < best_validation_loss * improvement_threshold
+                    ):
                         patience = max(patience, iter * patience_increase)
 
                     best_validation_loss = this_validation_loss
                     # test it on the test set
 
-                    test_losses = [test_model(i)
-                                   for i in xrange(n_test_batches)]
+                    test_losses = [test_model(i) for i in xrange(n_test_batches)]
                     test_score = numpy.mean(test_losses)
 
-                    print(
+                    print (
                         (
-                            '     epoch %i, minibatch %i/%i, test error of'
-                            ' best model %f %%'
-                        ) %
-                        (
+                            "     epoch %i, minibatch %i/%i, test error of"
+                            " best model %f %%"
+                        )
+                        % (
                             epoch,
                             minibatch_index + 1,
                             n_train_batches,
-                            test_score * 100.
+                            test_score * 100.0,
                         )
                     )
 
@@ -432,18 +425,22 @@ def sgd_optimization_mnist(learning_rate=0.13, n_epochs=1000,
                 break
 
     end_time = time.clock()
-    print(
+    print (
         (
-            'Optimization complete with best validation score of %f %%,'
-            'with test performance %f %%'
+            "Optimization complete with best validation score of %f %%,"
+            "with test performance %f %%"
         )
-        % (best_validation_loss * 100., test_score * 100.)
+        % (best_validation_loss * 100.0, test_score * 100.0)
     )
-    print 'The code run for %d epochs, with %f epochs/sec' % (
-        epoch, 1. * epoch / (end_time - start_time))
-    print >> sys.stderr, ('The code for file ' +
-                          os.path.split(__file__)[1] +
-                          ' ran for %.1fs' % ((end_time - start_time)))
+    print "The code run for %d epochs, with %f epochs/sec" % (
+        epoch,
+        1.0 * epoch / (end_time - start_time),
+    )
+    print >> sys.stderr, (
+        "The code for file "
+        + os.path.split(__file__)[1]
+        + " ran for %.1fs" % ((end_time - start_time))
+    )
 
 
 def create_dataset_tar(name, dataset):
@@ -452,16 +449,18 @@ def create_dataset_tar(name, dataset):
     x, y = dataset
     import h5py
     import tarfile
-    Wfile = h5py.File('x.hdf5', 'w')
+
+    Wfile = h5py.File("x.hdf5", "w")
     Wfile.create_dataset(Wfile.id.name, data=x)
     Wfile.close()
-    Wfile = h5py.File('y.hdf5', 'w')
+    Wfile = h5py.File("y.hdf5", "w")
     Wfile.create_dataset(Wfile.id.name, data=y)
     Wfile.close()
     with tarfile.open("mnist-%s.tar" % name, "w:") as tar:
-        for fname in ['x.hdf5', 'y.hdf5']:
+        for fname in ["x.hdf5", "y.hdf5"]:
             tar.add(fname)
 
-if __name__ == '__main__':
-    print(theano.config.floatX)
+
+if __name__ == "__main__":
+    print (theano.config.floatX)
     sgd_optimization_mnist()

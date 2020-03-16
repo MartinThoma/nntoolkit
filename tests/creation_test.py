@@ -19,7 +19,7 @@ def get_parser_test():
 def simple_creation_test():
     """Evaluate a model with a simple example feature vector."""
     # Get model file
-    create.main('mlp', '10:12:8', 'model_test.tar')
+    create.main("mlp", "10:12:8", "model_test.tar")
 
 
 def create_already_exists_test():
@@ -27,7 +27,7 @@ def create_already_exists_test():
     current_folder = os.path.dirname(os.path.realpath(__file__))
     misc_folder = os.path.join(current_folder, "misc")
     model_file = os.path.join(misc_folder, "model.tar")
-    create.main('mlp', '10:12:8', model_file)
+    create.main("mlp", "10:12:8", model_file)
     # TODO: Check if error was logged
 
 
@@ -36,5 +36,5 @@ def create_nontar_model_test():
     current_folder = os.path.dirname(os.path.realpath(__file__))
     misc_folder = os.path.join(current_folder, "misc")
     model_file = os.path.join(misc_folder, "model-nonexistent.bla")
-    create.main('mlp', '10:12:8', model_file)
+    create.main("mlp", "10:12:8", model_file)
     # TODO: Check if error was logged

@@ -14,21 +14,28 @@ import nntoolkit.evaluate as evaluate
 def get_parser():
     """Return the parser object for this script."""
     from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
-    parser = ArgumentParser(description=__doc__,
-                            formatter_class=ArgumentDefaultsHelpFormatter)
-    parser.add_argument("-m", "--model",
-                        dest="model_file",
-                        help="where is the model file (.tar) which should get "
-                             "tested?",
-                        metavar="FILE",
-                        type=lambda x: utils.is_valid_file(parser, x),
-                        required=True)
-    parser.add_argument("-i", "--input",
-                        dest="test_data",
-                        help="""a file which contains testing data (.tar)""",
-                        metavar="FILE",
-                        type=lambda x: utils.is_valid_file(parser, x),
-                        required=True)
+
+    parser = ArgumentParser(
+        description=__doc__, formatter_class=ArgumentDefaultsHelpFormatter
+    )
+    parser.add_argument(
+        "-m",
+        "--model",
+        dest="model_file",
+        help="where is the model file (.tar) which should get " "tested?",
+        metavar="FILE",
+        type=lambda x: utils.is_valid_file(parser, x),
+        required=True,
+    )
+    parser.add_argument(
+        "-i",
+        "--input",
+        dest="test_data",
+        help="""a file which contains testing data (.tar)""",
+        metavar="FILE",
+        type=lambda x: utils.is_valid_file(parser, x),
+        required=True,
+    )
     return parser
 
 
@@ -62,11 +69,14 @@ def main(model_file, test_data, verbose=True):
             correct += 1
         total += 1
         if verbose and total % 100 == 0:
-            print("%i: %0.2f" % (total, float(correct)/total))
-    print("Correct: %i/%i = %0.2f of total correct" %
-          (correct, total, float(correct)/total))
-    return float(correct)/total
+            print("%i: %0.2f" % (total, float(correct) / total))
+    print(
+        "Correct: %i/%i = %0.2f of total correct"
+        % (correct, total, float(correct) / total)
+    )
+    return float(correct) / total
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     args = get_parser().parse_args()
     main(args.model_file, args.test_data)

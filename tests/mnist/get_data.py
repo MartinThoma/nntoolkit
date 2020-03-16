@@ -10,9 +10,11 @@ import h5py
 import logging
 import sys
 
-logging.basicConfig(format='%(asctime)s %(levelname)s %(message)s',
-                    level=logging.DEBUG,
-                    stream=sys.stdout)
+logging.basicConfig(
+    format="%(asctime)s %(levelname)s %(message)s",
+    level=logging.DEBUG,
+    stream=sys.stdout,
+)
 
 # MNIST specific
 from struct import unpack
@@ -34,8 +36,8 @@ def get_labeled_data(imagefile, labelfile):
     (xs, ys)
     """
     # Open the images with gzip in read binary mode
-    images = gzip.open(imagefile, 'rb')
-    labels = gzip.open(labelfile, 'rb')
+    images = gzip.open(imagefile, "rb")
+    labels = gzip.open(labelfile, "rb")
 
     # Read the binary data
 
@@ -44,19 +46,19 @@ def get_labeled_data(imagefile, labelfile):
     # Get metadata for images
     images.read(4)  # skip the magic_number
     number_of_images = images.read(4)
-    number_of_images = unpack('>I', number_of_images)[0]
+    number_of_images = unpack(">I", number_of_images)[0]
     rows = images.read(4)
-    rows = unpack('>I', rows)[0]
+    rows = unpack(">I", rows)[0]
     cols = images.read(4)
-    cols = unpack('>I', cols)[0]
+    cols = unpack(">I", cols)[0]
 
     # Get metadata for labels
     labels.read(4)  # skip the magic_number
     N = labels.read(4)
-    N = unpack('>I', N)[0]
+    N = unpack(">I", N)[0]
 
     if number_of_images != N:
-        raise Exception('number of labels did not match the number of images')
+        raise Exception("number of labels did not match the number of images")
 
     # Get the data
     x = zeros((N, rows, cols), dtype=uint8)  # Initialize numpy array
@@ -67,11 +69,11 @@ def get_labeled_data(imagefile, labelfile):
         for row in range(rows):
             for col in range(cols):
                 tmp_pixel = images.read(1)  # Just a single byte
-                tmp_pixel = unpack('>B', tmp_pixel)[0]
+                tmp_pixel = unpack(">B", tmp_pixel)[0]
                 x[i][row][col] = tmp_pixel
         tmp_label = labels.read(1)
-        y[i] = unpack('>B', tmp_label)[0]
-    x = x.reshape(len(x), 28*28)
+        y[i] = unpack(">B", tmp_label)[0]
+    x = x.reshape(len(x), 28 * 28)
     return (x, y)
 
 
@@ -79,15 +81,15 @@ def create_nntoolkit_file(x, y, target_path):
     assert target_path.endswith(".tar")
     filenames = []
 
-    train = h5py.File('x.hdf5', 'w')
-    train.create_dataset('x.hdf5', data=x)
+    train = h5py.File("x.hdf5", "w")
+    train.create_dataset("x.hdf5", data=x)
     train.close()
-    filenames.append('x.hdf5')
+    filenames.append("x.hdf5")
 
-    train = h5py.File('y.hdf5', 'w')
-    train.create_dataset('y.hdf5', data=y)
+    train = h5py.File("y.hdf5", "w")
+    train.create_dataset("y.hdf5", data=y)
     train.close()
-    filenames.append('y.hdf5')
+    filenames.append("y.hdf5")
 
     # Create tar file
     with tarfile.open(target_path, "w:") as tar:
@@ -100,14 +102,18 @@ def create_nntoolkit_file(x, y, target_path):
 
 
 def main():
-    train = ['http://yann.lecun.com/exdb/mnist/train-images-idx3-ubyte.gz',
-             'http://yann.lecun.com/exdb/mnist/train-labels-idx1-ubyte.gz']
-    test = ['http://yann.lecun.com/exdb/mnist/t10k-images-idx3-ubyte.gz',
-            'http://yann.lecun.com/exdb/mnist/t10k-labels-idx1-ubyte.gz']
+    train = [
+        "http://yann.lecun.com/exdb/mnist/train-images-idx3-ubyte.gz",
+        "http://yann.lecun.com/exdb/mnist/train-labels-idx1-ubyte.gz",
+    ]
+    test = [
+        "http://yann.lecun.com/exdb/mnist/t10k-images-idx3-ubyte.gz",
+        "http://yann.lecun.com/exdb/mnist/t10k-labels-idx1-ubyte.gz",
+    ]
 
     # Download all files
     logging.info("Download all files")
-    for url_path in train+test:
+    for url_path in train + test:
         filename = os.path.basename(url_path)
         if not os.path.isfile(filename):
             urllib.urlretrieve(url_path, filename)
@@ -125,5 +131,5 @@ def main():
     create_nntoolkit_file(x_train, y_train, "mnist_traindata.tar")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

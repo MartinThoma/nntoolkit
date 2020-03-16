@@ -19,23 +19,33 @@ from nntoolkit import utils
 def get_parser():
     """Return the parser object for this script."""
     from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
-    parser = ArgumentParser(description=__doc__,
-                            formatter_class=ArgumentDefaultsHelpFormatter)
-    parser.add_argument("-t", "--type",
-                        choices=["mlp"],
-                        default="mlp",
-                        dest="type",
-                        help="which type of neural network do you want to "
-                             "create?",
-                        metavar="TYPE")
-    parser.add_argument("-a", "--architecture",
-                        dest="architecture",
-                        help="""architecture of the network""",
-                        default="160:500:369")
-    parser.add_argument("-f", "--file",
-                        dest="model_file",
-                        help="write model file to MODEL_FILE",
-                        metavar="MODEL_FILE")
+
+    parser = ArgumentParser(
+        description=__doc__, formatter_class=ArgumentDefaultsHelpFormatter
+    )
+    parser.add_argument(
+        "-t",
+        "--type",
+        choices=["mlp"],
+        default="mlp",
+        dest="type",
+        help="which type of neural network do you want to " "create?",
+        metavar="TYPE",
+    )
+    parser.add_argument(
+        "-a",
+        "--architecture",
+        dest="architecture",
+        help="""architecture of the network""",
+        default="160:500:369",
+    )
+    parser.add_argument(
+        "-f",
+        "--file",
+        dest="model_file",
+        help="write model file to MODEL_FILE",
+        metavar="MODEL_FILE",
+    )
     return parser
 
 
@@ -49,11 +59,11 @@ def xaviar10_weight_init(neurons_a, neurons_b):
     """
     fan_in = neurons_a
     fan_out = neurons_b - 2
-    init_weight = 4.0*numpy.sqrt(6.0/(fan_in+fan_out))
-    W = [numpy.random.uniform(low=-init_weight,
-                              high=init_weight,
-                              size=neurons_a)
-         for _ in range(neurons_b)]
+    init_weight = 4.0 * numpy.sqrt(6.0 / (fan_in + fan_out))
+    W = [
+        numpy.random.uniform(low=-init_weight, high=init_weight, size=neurons_a)
+        for _ in range(neurons_b)
+    ]
     return W
 
 
@@ -72,12 +82,12 @@ def create_hdf5s_for_layer(i, layer):
     """Create one HDF5 file for the weight matrix W and one for the bias vector
     b.
     """
-    Wfile = h5py.File('W%i.hdf5' % i, 'w')
-    Wfile.create_dataset(Wfile.id.name, data=layer['W'])
+    Wfile = h5py.File("W%i.hdf5" % i, "w")
+    Wfile.create_dataset(Wfile.id.name, data=layer["W"])
     Wfile.close()
 
-    bfile = h5py.File('b%i.hdf5' % i, 'w')
-    bfile.create_dataset(bfile.id.name, data=layer['b'])
+    bfile = h5py.File("b%i.hdf5" % i, "w")
+    bfile.create_dataset(bfile.id.name, data=layer["b"])
     bfile.close()
 
 
@@ -100,10 +110,14 @@ def create_layers(neurons):
         b = [random.random() for _ in range(neurons_a)]
         # TODO: parse architecture string to allow arbitrary activation
         # functions
-        layers_binary.append({'W': numpy.array(W, dtype=theano.config.floatX),
-                              'b': numpy.array(b, dtype=theano.config.floatX),
-                              'activation': 'Sigmoid'})
-    layers_binary[-1]['activation'] = 'Softmax'
+        layers_binary.append(
+            {
+                "W": numpy.array(W, dtype=theano.config.floatX),
+                "b": numpy.array(b, dtype=theano.config.floatX),
+                "activation": "Sigmoid",
+            }
+        )
+    layers_binary[-1]["activation"] = "Softmax"
     return layers_binary
 
 
@@ -126,12 +140,12 @@ def main(nn_type, architecture, model_file):
 
     filenames = ["model.yml"]  # "input_semantics.csv", "output_semantics.csv"
 
-    if nn_type == 'mlp':
+    if nn_type == "mlp":
         # Create layers by looking at 'architecture'
         layers = []
 
         # TODO: the activation function could be here!
-        neurons = list(map(int, architecture.split(':')))
+        neurons = list(map(int, architecture.split(":")))
 
         layers_binary = create_layers(neurons)
 
@@ -143,17 +157,19 @@ def main(nn_type, architecture, model_file):
     for i, layer in enumerate(layers_binary):
         create_hdf5s_for_layer(i, layer)
 
-        layers.append({'W': {'size': list(layer['W'].shape),
-                             'filename': 'W%i.hdf5' % i},
-                       'b': {'size': list(layer['b'].shape),
-                             'filename': 'b%i.hdf5' % i},
-                       'activation': layer['activation']})
-        filenames.append('W%i.hdf5' % i)
-        filenames.append('b%i.hdf5' % i)
+        layers.append(
+            {
+                "W": {"size": list(layer["W"].shape), "filename": "W%i.hdf5" % i},
+                "b": {"size": list(layer["b"].shape), "filename": "b%i.hdf5" % i},
+                "activation": layer["activation"],
+            }
+        )
+        filenames.append("W%i.hdf5" % i)
+        filenames.append("b%i.hdf5" % i)
 
-        model = {'type': 'mlp', 'layers': layers}
+        model = {"type": "mlp", "layers": layers}
 
-    with open('model.yml', 'w') as f:
+    with open("model.yml", "w") as f:
         yaml.dump(model, f, default_flow_style=False)
 
     # Create tar file
@@ -166,6 +182,6 @@ def main(nn_type, architecture, model_file):
         os.remove(filename)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     args = get_parser().parse_args()
     main(args.type, args.architecture, args.model_file)

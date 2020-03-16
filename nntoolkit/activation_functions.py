@@ -57,9 +57,11 @@ def get_activation_function(function_name):
     >>> get_activation_function('Sigmoid')
     SigmoidFunction
     """
-    return get_class(name=function_name,
-                     config_key='activation-functions',
-                     module=sys.modules[__name__])()
+    return get_class(
+        name=function_name,
+        config_key="activation-functions",
+        module=sys.modules[__name__],
+    )()
 
 
 # Only activation function classes follow
@@ -76,7 +78,7 @@ class Sigmoid(object):
         return "Sigmoid"
 
     def __call__(self, x):
-        sigmoid = numpy.vectorize(lambda x: 1./(1+numpy.exp(-x)))
+        sigmoid = numpy.vectorize(lambda x: 1.0 / (1 + numpy.exp(-x)))
         return sigmoid(x)
 
 
