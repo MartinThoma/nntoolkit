@@ -70,3 +70,4 @@ cover/
 *.yml
 *.tar
 *.gz
+tests/reports/

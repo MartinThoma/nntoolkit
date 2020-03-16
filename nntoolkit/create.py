@@ -8,46 +8,16 @@ import logging
 import os
 import random
 import tarfile
+from typing import List
 
-# First party modules
+# Third party modules
 import h5py
 import numpy
 import theano
 import yaml
+
+# First party modules
 from nntoolkit import utils
-
-
-def get_parser():
-    """Return the parser object for this script."""
-    from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
-
-    parser = ArgumentParser(
-        description=__doc__, formatter_class=ArgumentDefaultsHelpFormatter
-    )
-    parser.add_argument(
-        "-t",
-        "--type",
-        choices=["mlp"],
-        default="mlp",
-        dest="type",
-        help="which type of neural network do you want to " "create?",
-        metavar="TYPE",
-    )
-    parser.add_argument(
-        "-a",
-        "--architecture",
-        dest="architecture",
-        help="""architecture of the network""",
-        default="160:500:369",
-    )
-    parser.add_argument(
-        "-f",
-        "--file",
-        dest="model_file",
-        help="write model file to MODEL_FILE",
-        metavar="MODEL_FILE",
-    )
-    return parser
 
 
 def xaviar10_weight_init(neurons_a, neurons_b):
@@ -92,12 +62,13 @@ def create_hdf5s_for_layer(i, layer):
     bfile.close()
 
 
-def create_layers(neurons):
-    """Create the layers of the neural network.
+def create_layers(neurons: List[int]):
+    """
+    Create the layers of the neural network.
 
     Parameters
     ----------
-    neurons : list of integers
+    neurons : List[int]
         Indicates how many neurons are in which layer.
 
     Returns
@@ -122,15 +93,17 @@ def create_layers(neurons):
     return layers_binary
 
 
-def main(nn_type, architecture, model_file):
-    """Create a neural network file of ``nn_type`` with ``architecture``.
+def main(nn_type: str, architecture: str, model_file: str):
+    """
+    Create a neural network file of ``nn_type`` with ``architecture``.
+
     Store it in ``model_file``.
 
     Parameters
     ----------
-    nn_type : string
-        e.g. 'mlp'
-    model_file :
+    nn_type : {'mlp'}
+    architecture: str
+    model_file : str
         A path which should end with .tar. The created model will be written
         there.
     """
@@ -181,8 +154,3 @@ def main(nn_type, architecture, model_file):
     # Remove temporary files which are now in tar file
     for filename in filenames:
         os.remove(filename)
-
-
-if __name__ == "__main__":
-    args = get_parser().parse_args()
-    main(args.type, args.architecture, args.model_file)

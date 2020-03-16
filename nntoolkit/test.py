@@ -6,38 +6,12 @@
 # Core Library modules
 import logging
 
+# Third party modules
+import numpy
+
 # First party modules
 import nntoolkit.evaluate as evaluate
 import nntoolkit.utils as utils
-import numpy
-
-
-def get_parser():
-    """Return the parser object for this script."""
-    from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
-
-    parser = ArgumentParser(
-        description=__doc__, formatter_class=ArgumentDefaultsHelpFormatter
-    )
-    parser.add_argument(
-        "-m",
-        "--model",
-        dest="model_file",
-        help="where is the model file (.tar) which should get " "tested?",
-        metavar="FILE",
-        type=lambda x: utils.is_valid_file(parser, x),
-        required=True,
-    )
-    parser.add_argument(
-        "-i",
-        "--input",
-        dest="test_data",
-        help="""a file which contains testing data (.tar)""",
-        metavar="FILE",
-        type=lambda x: utils.is_valid_file(parser, x),
-        required=True,
-    )
-    return parser
 
 
 def main(model_file, test_data, verbose=True):
@@ -76,8 +50,3 @@ def main(model_file, test_data, verbose=True):
         % (correct, total, float(correct) / total)
     )
     return float(correct) / total
-
-
-if __name__ == "__main__":
-    args = get_parser().parse_args()
-    main(args.model_file, args.test_data)

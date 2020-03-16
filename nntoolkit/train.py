@@ -16,68 +16,6 @@ import theano.tensor as tensor
 import nntoolkit.utils as utils
 
 
-def get_parser():
-    """Return the parser object for this script."""
-    from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
-
-    parser = ArgumentParser(
-        description=__doc__, formatter_class=ArgumentDefaultsHelpFormatter
-    )
-    parser.add_argument(
-        "-m",
-        "--model",
-        dest="model_file",
-        help="where is the model file (.tar) which should get " "trained?",
-        metavar="FILE",
-        type=lambda x: utils.is_valid_file(parser, x),
-        required=True,
-    )
-    parser.add_argument(
-        "-i",
-        "--input",
-        dest="training_data",
-        help="""a file which contains training data (.tar)""",
-        metavar="FILE",
-        type=lambda x: utils.is_valid_file(parser, x),
-        required=True,
-    )
-    parser.add_argument(
-        "-o",
-        "--output",
-        dest="model_output_file",
-        help="""where should the new model be written?""",
-        metavar="FILE",
-        required=True,
-    )
-    parser.add_argument(
-        "--batchsize",
-        dest="batch_size",
-        help=(
-            "A positive number which indicates how many "
-            "training examples get looked at before the "
-            "parameters get updated."
-        ),
-        default=256,
-        type=int,
-    )
-    parser.add_argument(
-        "-lr",
-        "--learningrate",
-        dest="learning_rate",
-        help=("A positive number, typically between 0 and " "10."),
-        default=0.1,
-        type=float,
-    )
-    parser.add_argument(
-        "--epochs",
-        dest="epochs",
-        help=("Positive number of training epochs"),
-        default=100,
-        type=int,
-    )
-    return parser
-
-
 def minibatch_gradient_descent(model, x, y, batch_size=256, lr=0.1, epochs=100):
     """Train a given neural network.
 
