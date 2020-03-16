@@ -28,7 +28,7 @@ import os
 import sys
 import time
 
-# First party modules
+# Third party modules
 import numpy
 import theano
 import theano.tensor as T
@@ -227,7 +227,7 @@ def test_mlp(
     ######################
     # BUILD ACTUAL MODEL #
     ######################
-    print "... building the model"
+    print("... building the model")
 
     # allocate symbolic variables for the data
     index = T.lscalar()  # index to a [mini]batch
@@ -305,7 +305,7 @@ def test_mlp(
     ###############
     # TRAIN MODEL #
     ###############
-    print "... training"
+    print("... training")
 
     # early-stopping parameters
     patience = 10000  # look as this many examples regardless
@@ -329,7 +329,7 @@ def test_mlp(
 
     while (epoch < n_epochs) and (not done_looping):
         epoch = epoch + 1
-        for minibatch_index in xrange(n_train_batches):
+        for minibatch_index in range(n_train_batches):
 
             minibatch_avg_cost = train_model(minibatch_index)
             # iteration number
@@ -337,10 +337,10 @@ def test_mlp(
 
             if (iter + 1) % validation_frequency == 0:
                 # compute zero-one loss on validation set
-                validation_losses = [validate_model(i) for i in xrange(n_valid_batches)]
+                validation_losses = [validate_model(i) for i in range(n_valid_batches)]
                 this_validation_loss = numpy.mean(validation_losses)
 
-                print (
+                print(
                     "epoch %i, minibatch %i/%i, validation error %f %%"
                     % (
                         epoch,
@@ -363,10 +363,10 @@ def test_mlp(
                     best_iter = iter
 
                     # test it on the test set
-                    test_losses = [test_model(i) for i in xrange(n_test_batches)]
+                    test_losses = [test_model(i) for i in range(n_test_batches)]
                     test_score = numpy.mean(test_losses)
 
-                    print (
+                    print(
                         (
                             "     epoch %i, minibatch %i/%i, test error of "
                             "best model %f %%"
@@ -384,17 +384,18 @@ def test_mlp(
                 break
 
     end_time = time.clock()
-    print (
+    print(
         (
             "Optimization complete. Best validation score of %f %% "
             "obtained at iteration %i, with test performance %f %%"
         )
         % (best_validation_loss * 100.0, best_iter + 1, test_score * 100.0)
     )
-    print >> sys.stderr, (
+    print(
         "The code for file "
         + os.path.split(__file__)[1]
-        + " ran for %.2fm" % ((end_time - start_time) / 60.0)
+        + " ran for %.2fm" % ((end_time - start_time) / 60.0),
+        file=sys.stderr,
     )
 
 

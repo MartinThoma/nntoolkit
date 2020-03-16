@@ -7,12 +7,13 @@
 # Core Library modules
 import logging
 
-# First party modules
-# nntoolkit modules
-import nntoolkit.utils as utils
+# Third party modules
 import numpy as np
 import theano
 import theano.tensor as tensor
+
+# First party modules
+import nntoolkit.utils as utils
 
 
 def get_parser():

@@ -7,15 +7,16 @@
 import json
 import sys
 
+# Third party modules
+import numpy
+
 # First party modules
 import nntoolkit.utils as utils
-import numpy
 
 PY3 = sys.version > "3"
 
 if not PY3:
     from future.builtins import open
-
 
 
 def get_parser():

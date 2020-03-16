@@ -7,10 +7,10 @@ import os
 import sys
 import tarfile
 import tempfile
-import urllib
+import urllib.request
 from struct import unpack
 
-# First party modules
+# Third party modules
 import h5py
 from numpy import uint8, zeros
 
@@ -19,7 +19,6 @@ logging.basicConfig(
     level=logging.DEBUG,
     stream=sys.stdout,
 )
-
 
 
 def get_labeled_data(imagefile, labelfile):
@@ -116,7 +115,7 @@ def main():
     for url_path in train + test:
         filename = os.path.basename(url_path)
         if not os.path.isfile(filename):
-            urllib.urlretrieve(url_path, filename)
+            urllib.request.urlretrieve(url_path, filename)
     train = [os.path.basename(url_path) for url_path in train]
     test = [os.path.basename(url_path) for url_path in test]
 
