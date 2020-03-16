@@ -38,9 +38,9 @@ You might have to set
 
 .. code:: text
 
-    graph G { 
-        graph [ dpi = 300 ]; 
-        /* The rest of your graph here. */ 
+    graph G {
+        graph [ dpi = 300 ];
+        /* The rest of your graph here. */
     }
 
 
@@ -164,10 +164,10 @@ not need any attention is
     ---------------------
     ::
 
-        future 
+        future
           \-builtins (nntoolkit.utils,nntoolkit.evaluate)
         h5py (nntoolkit.create,nntoolkit.utils)
-        nntoolkit 
+        nntoolkit
           \-activation_functions (nntoolkit.utils)
           \-evaluate (nntoolkit.test)
         numpy (nntoolkit.activation_functions,nntoolkit.create,nntoolkit.train,nntoolkit.test,nntoolkit.evaluate)
@@ -286,4 +286,3 @@ not need any attention is
 Feedback
 --------
 General feedback can be sent to info@martin-thoma.de
-

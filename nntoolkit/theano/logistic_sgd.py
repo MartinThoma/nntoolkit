@@ -36,14 +36,15 @@ References:
 """
 __docformat__ = "restructedtext en"
 
+# Core Library modules
 import cPickle
 import gzip
 import os
 import sys
 import time
 
+# First party modules
 import numpy
-
 import theano
 import theano.tensor as T
 

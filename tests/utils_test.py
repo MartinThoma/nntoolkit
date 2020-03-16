@@ -1,15 +1,15 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import nose
-import mock
-import os
+# Core Library modules
 import argparse
+import os
 
-# nntoolkit modules
+# First party modules
+import mock
 import nntoolkit
 import nntoolkit.utils as utils
-
+import nose
 
 # Tests
 # @nose.tools.raises(SystemExit)

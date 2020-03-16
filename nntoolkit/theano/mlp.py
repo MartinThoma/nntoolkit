@@ -23,16 +23,15 @@ References:
 __docformat__ = "restructedtext en"
 
 
+# Core Library modules
 import os
 import sys
 import time
 
+# First party modules
 import numpy
-
 import theano
 import theano.tensor as T
-
-
 from logistic_sgd import LogisticRegression, load_data
 
 

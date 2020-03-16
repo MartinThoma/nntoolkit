@@ -3,12 +3,13 @@
 
 """Test a neural network."""
 
-import numpy
+# Core Library modules
 import logging
 
-# nntoolkit modules
-import nntoolkit.utils as utils
+# First party modules
 import nntoolkit.evaluate as evaluate
+import nntoolkit.utils as utils
+import numpy
 
 
 def get_parser():

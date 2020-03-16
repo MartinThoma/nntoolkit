@@ -6,23 +6,22 @@
 """
 
 
-from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
-
+# Core Library modules
 import logging
 import sys
-logging.basicConfig(format='%(asctime)s %(levelname)s %(message)s',
-                    level=logging.DEBUG,
-                    stream=sys.stdout)
+from argparse import ArgumentDefaultsHelpFormatter, ArgumentParser
 
-# hwrt modules
+# First party modules
 # Every nntoolkit subcommand that should be available through
 #   nntoolkit SUBCOMMAND
 # has to be added to ``get_parser()`` and to ``main``.
 import nntoolkit
-from nntoolkit import evaluate
-from nntoolkit import create
-from nntoolkit import train
-from nntoolkit import test
+from nntoolkit import create, evaluate, test, train
+
+logging.basicConfig(format='%(asctime)s %(levelname)s %(message)s',
+                    level=logging.DEBUG,
+                    stream=sys.stdout)
+
 
 
 def get_parser():

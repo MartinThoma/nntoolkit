@@ -3,10 +3,13 @@
 
 """Activation functions get applied within neural network nodes."""
 
-import sys
-import numpy
-import logging
+# Core Library modules
 import inspect
+import logging
+import sys
+
+# First party modules
+import numpy
 
 
 def get_class(name, config_key, module):

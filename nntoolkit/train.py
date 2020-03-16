@@ -4,14 +4,15 @@
 """Train a neural network."""
 
 
-import numpy as np
+# Core Library modules
 import logging
 
-import theano
-import theano.tensor as tensor
-
+# First party modules
 # nntoolkit modules
 import nntoolkit.utils as utils
+import numpy as np
+import theano
+import theano.tensor as tensor
 
 
 def get_parser():

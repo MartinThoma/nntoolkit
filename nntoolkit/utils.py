@@ -2,19 +2,18 @@
 
 """Utility functions that can be used in multiple scripts."""
 
-import os
+# Core Library modules
+import csv
 import logging
-import tempfile
+import os
 import shutil
 import sys
-
-# Data formats
 import tarfile
+import tempfile
+
+# First party modules
 import h5py
 import yaml
-import csv
-
-# nntoolkit
 from nntoolkit.activation_functions import get_activation_function as get_af
 
 PY3 = sys.version > "3"

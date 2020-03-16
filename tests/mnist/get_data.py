@@ -1,14 +1,18 @@
 #!/usr/bin/env python
 
-import urllib
-import os
-import tempfile
-
-import tarfile
-import h5py
-
+# Core Library modules
+import gzip
 import logging
+import os
 import sys
+import tarfile
+import tempfile
+import urllib
+from struct import unpack
+
+# First party modules
+import h5py
+from numpy import uint8, zeros
 
 logging.basicConfig(
     format="%(asctime)s %(levelname)s %(message)s",
@@ -16,10 +20,6 @@ logging.basicConfig(
     stream=sys.stdout,
 )
 
-# MNIST specific
-from struct import unpack
-import gzip
-from numpy import zeros, uint8
 
 
 def get_labeled_data(imagefile, labelfile):

@@ -3,17 +3,19 @@
 
 """Evaluate a neural network."""
 
-import numpy
+# Core Library modules
 import json
 import sys
+
+# First party modules
+import nntoolkit.utils as utils
+import numpy
 
 PY3 = sys.version > "3"
 
 if not PY3:
     from future.builtins import open
 
-# nntoolkit modules
-import nntoolkit.utils as utils
 
 
 def get_parser():

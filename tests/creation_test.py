@@ -1,13 +1,14 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import nose
+# Core Library modules
+import json
 import os
 import tempfile
-import json
 
-# nntookit modules
+# First party modules
 import nntoolkit.create as create
+import nose
 
 
 # Tests

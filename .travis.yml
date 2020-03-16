@@ -2,7 +2,7 @@ language: python
 python:
   - 2.7
   - 3.4
-install: 
+install:
   - pip install natsort coveralls
   - pip install future
   - pip install Cython

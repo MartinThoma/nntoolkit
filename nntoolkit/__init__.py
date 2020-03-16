@@ -4,8 +4,11 @@
    If any questions are not covered by the documentation or if difficulties
    with using nntoolkit occur, please contact info@martin-thoma.de"""
 
-from pkg_resources import get_distribution, DistributionNotFound
+# Core Library modules
 import os.path
+
+# Third party modules
+from pkg_resources import DistributionNotFound, get_distribution
 
 try:
     _dist = get_distribution("nntoolkit")

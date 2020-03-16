@@ -3,16 +3,17 @@
 
 """Create a neural network model file."""
 
+# Core Library modules
 import logging
 import os
-import tarfile
 import random
-import yaml
+import tarfile
+
+# First party modules
 import h5py
 import numpy
 import theano
-
-# nntoolkit modules
+import yaml
 from nntoolkit import utils
 
 
