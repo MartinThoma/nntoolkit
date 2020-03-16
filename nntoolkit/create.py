@@ -8,19 +8,20 @@ import logging
 import os
 import random
 import tarfile
-from typing import List
+from typing import Any, Dict, List
 
 # Third party modules
 import h5py
 import numpy
-import theano
 import yaml
 
 # First party modules
-from nntoolkit import utils
+import nntoolkit.utils
+
+logger = logging.getLogger(__name__)
 
 
-def xaviar10_weight_init(neurons_a, neurons_b):
+def xaviar10_weight_init(neurons_a: int, neurons_b: int):
     """Initialize the weights between a layer with ``neurons_a`` neurons
     and a layer with ``neurons_b`` neurons.
 
@@ -41,10 +42,10 @@ def xaviar10_weight_init(neurons_a, neurons_b):
 def is_valid_model_file(model_file_path):
     """Check if `model_file_path` is a valid model file."""
     if os.path.isfile(model_file_path):
-        logging.error("'%s' already exists.", model_file_path)
+        logger.error("'%s' already exists.", model_file_path)
         return False
     if not model_file_path.endswith(".tar"):
-        logging.error("'%s' does not end with '.tar'.", model_file_path)
+        logger.error("'%s' does not end with '.tar'.", model_file_path)
         return False
     return True
 
@@ -62,7 +63,7 @@ def create_hdf5s_for_layer(i, layer):
     bfile.close()
 
 
-def create_layers(neurons: List[int]):
+def create_layers(neurons: List[int]) -> List[Dict[str, Any]]:
     """
     Create the layers of the neural network.
 
@@ -73,7 +74,7 @@ def create_layers(neurons: List[int]):
 
     Returns
     -------
-    list of dictionaries :
+    layers_binary : List[Dict[str, Any]]
         random variables for the weight matrix W and the bias vector b
     """
     layers_binary = []
@@ -84,8 +85,8 @@ def create_layers(neurons: List[int]):
         # functions
         layers_binary.append(
             {
-                "W": numpy.array(W, dtype=theano.config.floatX),
-                "b": numpy.array(b, dtype=theano.config.floatX),
+                "W": numpy.array(W, dtype=numpy.float32),
+                "b": numpy.array(b, dtype=numpy.float32),
                 "activation": "Sigmoid",
             }
         )
@@ -110,7 +111,7 @@ def main(nn_type: str, architecture: str, model_file: str):
     if not is_valid_model_file(model_file):
         return
 
-    logging.info("Create %s with a %s architecture...", nn_type, architecture)
+    logger.info("Create %s with a %s architecture...", nn_type, architecture)
 
     filenames = ["model.yml"]  # "input_semantics.csv", "output_semantics.csv"
 
@@ -123,7 +124,7 @@ def main(nn_type: str, architecture: str, model_file: str):
 
         layers_binary = create_layers(neurons)
 
-        utils.create_boilerplate_semantics_files(neurons)
+        nntoolkit.utils.create_boilerplate_semantics_files(neurons)
         filenames.append("input_semantics.csv")
         filenames.append("output_semantics.csv")
 

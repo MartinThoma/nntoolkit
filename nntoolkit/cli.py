@@ -59,7 +59,7 @@ type_option = click.option(
 architecture_option = click.option("-a", "--architecture",)
 
 new_model_option = click.option(
-    "-f", "--file", "model_file", help="write model file to MODEL_FILE"
+    "-f", "--file", "model_file", help="write model file to MODEL_FILE (.tar)"
 )
 
 

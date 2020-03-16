@@ -10,10 +10,13 @@ import shutil
 import sys
 import tarfile
 import tempfile
+from typing import List
 
-# First party modules
+# Third party modules
 import h5py
 import yaml
+
+# First party modules
 from nntoolkit.activation_functions import get_activation_function as get_af
 
 PY3 = sys.version > "3"
@@ -178,8 +181,9 @@ def get_data(data_file):
     return (x, y)
 
 
-def create_boilerplate_semantics_files(neurons):
-    """Create boilerplate files which can contain semantic meaningful values.
+def create_boilerplate_semantics_files(neurons: List[int]):
+    """
+    Create boilerplate files which can contain semantic meaningful values.
 
     Parameters
     ----------
