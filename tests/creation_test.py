@@ -2,28 +2,24 @@
 # -*- coding: utf-8 -*-
 
 # Core Library modules
-import json
 import os
-import tempfile
 
 # First party modules
 import nntoolkit.create as create
-import nose
 
 
-# Tests
-def get_parser_test():
+def test_get_parser():
     """Check if the evaluation model returns a parser object."""
     create.get_parser()
 
 
-def simple_creation_test():
+def test_simple_creation():
     """Evaluate a model with a simple example feature vector."""
     # Get model file
     create.main("mlp", "10:12:8", "model_test.tar")
 
 
-def create_already_exists_test():
+def test_create_already_exists():
     """Try to create a model 'over' a file which already exists."""
     current_folder = os.path.dirname(os.path.realpath(__file__))
     misc_folder = os.path.join(current_folder, "misc")
@@ -32,7 +28,7 @@ def create_already_exists_test():
     # TODO: Check if error was logged
 
 
-def create_nontar_model_test():
+def test_create_nontar_model():
     """Try to create a model which has no tar file."""
     current_folder = os.path.dirname(os.path.realpath(__file__))
     misc_folder = os.path.join(current_folder, "misc")

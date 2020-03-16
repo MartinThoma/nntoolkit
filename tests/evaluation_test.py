@@ -8,22 +8,21 @@ import tempfile
 
 # First party modules
 import nntoolkit.evaluate as evaluate
-import nose
 
 
 # Tests
-def get_parser_test():
+def test_get_parser():
     """Check if the evaluation model returns a parser object."""
     evaluate.get_parser()
 
 
-def simple_evluation_test():
+def test_simple_evluation():
     """Evaluate a model with a simple example feature vector."""
     # Get model file
     current_folder = os.path.dirname(os.path.realpath(__file__))
     misc_folder = os.path.join(current_folder, "misc")
     model_file = os.path.join(misc_folder, "model.tar")
-    nose.tools.assert_equal(os.path.isfile(model_file), True)
+    assert os.path.isfile(model_file)
 
     features = [0 for i in range(167)]
 
@@ -37,7 +36,7 @@ def simple_evluation_test():
     os.remove(feature_file)
 
 
-def non_existing_model_file_test():
+def test_non_existing_model_file():
     """Check what happens when a non-existing model file is given to the main
     evaluate method.
     """
@@ -48,11 +47,11 @@ def non_existing_model_file_test():
     features = [0 for i in range(167)]
 
     evaluation_result = evaluate.main(model_file, features)
-    nose.tools.assert_equal([], evaluation_result)
+    assert evaluation_result == []
     # TODO: Is that a good idea? This should probably rather return an error.
 
 
-def non_tarfile_model_file_test():
+def test_non_tarfile_model_file():
     """Check what happens when a non-tarfile model file is given to the main
     evaluate method.
     """
@@ -63,11 +62,11 @@ def non_tarfile_model_file_test():
     features = [0 for i in range(167)]
 
     evaluation_result = evaluate.main(model_file, features)
-    nose.tools.assert_equal([], evaluation_result)
+    assert evaluation_result == []
     # TODO: Is that a good idea? This should probably rather return an error.
 
 
-def show_empty_results_test():
+def test_show_empty_results():
     """Show an empty results list."""
     print_string = evaluate.show_results([])
-    nose.tools.assert_equal("-- No results --", print_string)
+    assert print_string == "-- No results --"

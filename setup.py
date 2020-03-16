@@ -51,7 +51,7 @@ config = {
     "install_requires": [
         "argparse",
         "theano",
-        "nose",
+        "pytest",
         "natsort",
         "PyYAML",
         "h5py",
@@ -75,8 +75,6 @@ config = {
         "Topic :: Software Development",
         "Topic :: Utilities",
     ],
-    "zip_safe": False,
-    "test_suite": "nose.collector",
 }
 
 setup(**config)

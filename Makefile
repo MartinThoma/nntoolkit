@@ -9,7 +9,7 @@ upload:
 	python3 setup.py sdist bdist_wheel && twine upload dist/*
 
 test:
-	nosetests --with-coverage --cover-erase --cover-package nntoolkit --logging-level=INFO --cover-html
+	pytest
 
 testall:
 	make test
