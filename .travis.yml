@@ -1,7 +1,8 @@
 language: python
 python:
-  - 2.7
-  - 3.4
+  - 3.6
+  - 3.7
+  - 3.8
 install:
   - pip install natsort coveralls
   - pip install future
@@ -9,8 +10,6 @@ install:
   - pip install h5py
   - pip install scipy
   - pip install theano
-script:
-  - nosetests --with-coverage
 before_install:
   - sudo apt-get install libblas-dev liblapack-dev gfortran
   - sudo apt-get install python-scipy python-numpy
