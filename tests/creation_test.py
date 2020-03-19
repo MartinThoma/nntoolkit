@@ -8,11 +8,6 @@ import os
 import nntoolkit.create as create
 
 
-def test_get_parser():
-    """Check if the evaluation model returns a parser object."""
-    create.get_parser()
-
-
 def test_simple_creation():
     """Evaluate a model with a simple example feature vector."""
     # Get model file

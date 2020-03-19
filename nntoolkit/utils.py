@@ -7,22 +7,19 @@ import csv
 import logging
 import os
 import shutil
-import sys
 import tarfile
 import tempfile
-from typing import List
+from typing import Any, Dict, List, Optional, Tuple
 
 # Third party modules
 import h5py
+import numpy as np
 import yaml
 
 # First party modules
 from nntoolkit.activation_functions import get_activation_function as get_af
 
-PY3 = sys.version > "3"
-
-if not PY3:
-    from future.builtins import open
+logger = logging.getLogger(__name__)
 
 
 def is_valid_file(parser, arg):
@@ -44,8 +41,9 @@ def is_valid_folder(parser, arg):
 
 
 def get_outputs(output_file):
-    """Parse ``output_file`` which is a csv file and defines the semantics of
-    the output of a neural network.
+    """
+    Parse ``output_file`` which is a csv file and defines the semantics of the
+    output of a neural network.
 
     For example, output neuron 1 means class "0" in the MNIST classification
     task.
@@ -83,17 +81,17 @@ def check_and_create_model(modelfile):
     return tarfolder
 
 
-def get_model(modelfile):
+def get_model(modelfile: str) -> Dict[str, Any]:
     """Check if ``modelfile`` is valid.
 
     Parameters
     ----------
-    modelfile : string
+    modelfile : str
         path to a model.tar file which describes a neural network.
 
     Returns
     -------
-    dict :
+    model : Dict[str, Any]
         describes the model if everything seems to be fine. Return `False` if
         errors occur.
     """
@@ -101,17 +99,17 @@ def get_model(modelfile):
     if not tarfolder:
         return
 
-    model_yml = yaml.load(open(os.path.join(tarfolder, "model.yml")))
+    model_yml = yaml.safe_load(open(os.path.join(tarfolder, "model.yml")))
     if model_yml["type"] == "mlp":
         layers = []
         for layer in model_yml["layers"]:
             layertmp = {}
 
             f = h5py.File(os.path.join(tarfolder, layer["b"]["filename"]), "r")
-            layertmp["b"] = f[layer["b"]["filename"]].value
+            layertmp["b"] = f[layer["b"]["filename"]][()]
 
             f = h5py.File(os.path.join(tarfolder, layer["W"]["filename"]), "r")
-            layertmp["W"] = f[layer["W"]["filename"]].value
+            layertmp["W"] = f[layer["W"]["filename"]][()]
 
             layertmp["activation"] = get_af(layer["activation"])
 
@@ -140,44 +138,30 @@ def get_model(modelfile):
     return model_yml
 
 
-def get_data(data_file):
-    """Get data as x and y numpy arrays for a tar archive.
+def get_data(data_file: str) -> Tuple[np.ndarray, Optional[np.ndarray]]:
+    """
+    Get data as x and y numpy arrays for a hdf5 file.
 
     Parameters
     ----------
-    training_data : The path to a tar file.
+    data_file : str
+        The path to a tar file.
 
     Returns
     -------
-    Tuple (x, y), where y might be `None` in case of success or `False` in case
-    of error
+    (x, y): Tuple[np.ndarray, Optional[np.ndarray]]
     """
     if not os.path.isfile(data_file):
-        logging.error("File '%s' does not exist.", data_file)
-        return False
+        raise FileNotFoundError(f"File '{data_file}' does not exist.")
 
-    if not tarfile.is_tarfile(data_file):
-        logging.error("'%s' is not a valid tar file.", data_file)
-        return False
+    with h5py.File(data_file, "r") as f:
+        x = f["data"][()]
 
-    with tarfile.open(data_file) as tar:
-        filenames = tar.getnames()
-        if "x.hdf5" not in filenames:
-            logging.error("'%s' does not have a x.hdf5.", data_file)
-            return False
-        tar.extractall()
-        x = h5py.File("x.hdf5", "r")["x.hdf5"].value
-
-        if "y.hdf5" in filenames:
-            y = h5py.File("y.hdf5", "r")["y.hdf5"].value
+        if "labels" in f.keys():
+            y = f["labels"][()]
             y = y.reshape(len(y), 1)
         else:
             y = None
-
-    for filename in filenames:
-        # Cleanup
-        os.remove(filename)
-
     return (x, y)
 
 
@@ -202,17 +186,18 @@ def create_boilerplate_semantics_files(neurons: List[int]):
             f.write("output neuron %i\n" % i)
 
 
-def create_semantics_files(model):
-    """Create semantic input and output files which can contain semantic
+def create_semantics_files(model: Dict[str, Any]):
+    """
+    Create semantic input and output files which can contain semantic
     meaningful values.
 
     Parameters
     ----------
-    model : dict
+    model : Dict[str, Any]
         A neural network model
     """
     # input_semantics
-    with open("input_semantics.csv", "wb") as csvfile:
+    with open("input_semantics.csv", "w") as csvfile:
         spamwriter = csv.writer(
             csvfile, delimiter="\n", quotechar='"', quoting=csv.QUOTE_MINIMAL
         )
@@ -220,7 +205,7 @@ def create_semantics_files(model):
             spamwriter.writerow(semantic)
 
     # output_semantics
-    with open("output_semantics.csv", "wb") as csvfile:
+    with open("output_semantics.csv", "w") as csvfile:
         spamwriter = csv.writer(
             csvfile, delimiter="\n", quotechar='"', quoting=csv.QUOTE_MINIMAL
         )
@@ -228,8 +213,9 @@ def create_semantics_files(model):
             spamwriter.writerow(semantic)
 
 
-def write_model(model, model_file_path):
-    """Write ``model`` to ``model_file_path``.
+def write_model(model_dict: Dict[str, Any], model, model_file_path: str) -> bool:
+    """
+    Write ``model`` to ``model_file_path``.
 
     Returns
     -------
@@ -237,33 +223,24 @@ def write_model(model, model_file_path):
     """
     model_yml = {}
     model_yml["type"] = "mlp"
-    create_semantics_files(model)
+    create_semantics_files(model_dict)
 
     logging.info("Create %s...", model_yml["type"])
 
-    filenames = ["model.yml", "input_semantics.csv", "output_semantics.csv"]
+    model.save("model.h5")
+    filenames = ["model.yml", "model.h5", "input_semantics.csv", "output_semantics.csv"]
 
     # Write HDF5 files
     model_yml["layers"] = []
-    for i, layer in enumerate(model["layers"]):
+    for i, layer in enumerate(model_dict["layers"]):
         W, b = layer["W"], layer["b"]
         model_yml["layers"].append(
             {
-                "W": {"size": list(W.shape), "filename": "W%i.hdf5" % i},
-                "b": {"size": list(b.shape), "filename": "b%i.hdf5" % i},
+                "W": {"size": W["size"], "filename": f"W{i}.hdf5"},
+                "b": {"size": b["size"], "filename": f"b{i}.hdf5"},
                 "activation": str(layer["activation"]),
             }
         )
-        # Write HDF5 files
-        Wfile = h5py.File("W%i.hdf5" % i, "w")
-        Wfile.create_dataset(Wfile.id.name, data=W)
-        Wfile.close()
-        filenames.append("W%i.hdf5" % i)
-
-        bfile = h5py.File("b%i.hdf5" % i, "w")
-        bfile.create_dataset(bfile.id.name, data=b)
-        bfile.close()
-        filenames.append("b%i.hdf5" % i)
 
     # Create YAML file
     with open("model.yml", "w") as f:

@@ -1,8 +1,8 @@
 docs:
 	python setup.py upload_docs --upload-dir docs/_build/html
 
-localinstall:
-	sudo -H python setup.py install
+install:
+	pip install -e . --user
 
 upload:
 	make clean
@@ -34,3 +34,4 @@ clean:
 	rm -rf dist
 	rm -rf nntoolkit.egg-info
 	rm -rf tests/reports
+	rm -rf docs/build

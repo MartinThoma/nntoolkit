@@ -8,7 +8,7 @@ import inspect
 import logging
 import sys
 
-# First party modules
+# Third party modules
 import numpy
 
 
@@ -58,7 +58,7 @@ def get_activation_function(function_name):
     Examples
     --------
     >>> get_activation_function('Sigmoid')
-    SigmoidFunction
+    Sigmoid
     """
     return get_class(
         name=function_name,
@@ -96,5 +96,7 @@ class Softmax(object):
         return "Softmax"
 
     def __call__(self, x):
-        softmax = lambda x: numpy.divide(numpy.exp(x), numpy.sum(numpy.exp(x)))
+        def softmax(x):
+            return numpy.divide(numpy.exp(x), numpy.sum(numpy.exp(x)))
+
         return softmax(x)

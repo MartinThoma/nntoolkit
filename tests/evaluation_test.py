@@ -10,12 +10,6 @@ import tempfile
 import nntoolkit.evaluate as evaluate
 
 
-# Tests
-def test_get_parser():
-    """Check if the evaluation model returns a parser object."""
-    evaluate.get_parser()
-
-
 def test_simple_evluation():
     """Evaluate a model with a simple example feature vector."""
     # Get model file

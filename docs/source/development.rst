@@ -160,24 +160,6 @@ not need any attention is
 
 
 
-    External dependencies
-    ---------------------
-    ::
-
-        future
-          \-builtins (nntoolkit.utils,nntoolkit.evaluate)
-        h5py (nntoolkit.create,nntoolkit.utils)
-        nntoolkit
-          \-activation_functions (nntoolkit.utils)
-          \-evaluate (nntoolkit.test)
-        numpy (nntoolkit.activation_functions,nntoolkit.create,nntoolkit.train,nntoolkit.test,nntoolkit.evaluate)
-        pkg_resources (nntoolkit)
-        theano (nntoolkit.create,nntoolkit.train)
-          \-tensor (nntoolkit.train)
-        yaml (nntoolkit.create,nntoolkit.utils)
-
-
-
     Raw metrics
     -----------
 

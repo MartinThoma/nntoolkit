@@ -5,10 +5,10 @@
 
 # Core Library modules
 import json
-import sys
+from typing import Any, Dict, List
 
 # Third party modules
-import numpy
+import numpy as np
 
 # First party modules
 import nntoolkit.utils as utils
@@ -37,13 +37,14 @@ def show_results(results, n=10, print_results=True):
     return s
 
 
-def get_model_output(model, x):
+def get_model_output(model: Dict[str, Any], x: np.ndarray):
     """
+    Get the model output.
+
     Parameters
     ----------
-    model : dict
-        represents a model
-    x : An input vector
+    model : Dict[str, Any]
+    x : np.ndarray
 
     Returns
     -------
@@ -52,19 +53,23 @@ def get_model_output(model, x):
     if model["type"] == "mlp":
         for layer in model["layers"]:
             b, W, activation = layer["b"], layer["W"], layer["activation"]
-            x = numpy.dot(x, W)
+            x = np.dot(x, W)
             x = activation(x + b)
         x = x[0]
     return x
 
 
-def get_results(model_output, output_semantics):
+def get_results(
+    model_output: List[Any], output_semantics: List[Any]
+) -> List[Dict[str, Any]]:
     """
+    Get the prediction with semantics.
+
     Parameters
     ----------
-    model_output : list
+    model_output : List[Any]
         A list of probabilities
-    output_semantics : list
+    output_semantics : List[Any]
         A list of semantics
 
     Returns
@@ -84,13 +89,16 @@ def get_results(model_output, output_semantics):
     return results
 
 
-def main(modelfile, features, print_results=True):
-    """Evaluate the model described in ``modelfile`` with ``inputvec`` as
-    input data.
+def main(
+    modelfile: str, features: List[float], print_results: bool = True
+) -> List[Dict[str, Any]]:
+    """
+    Evaluate the model described in ``modelfile`` with ``inputvec`` as input
+    data.
 
     Parameters
     ----------
-    features : list of floats
+    features : List[float]
     print_results : bool
         Print results if True. Always return results.
 
@@ -101,7 +109,7 @@ def main(modelfile, features, print_results=True):
     model = utils.get_model(modelfile)
     if not model:
         return []
-    x = numpy.array([features])
+    x = np.array([features])
     model_output = get_model_output(model, x)
     results = get_results(model_output, model["outputs"])
 

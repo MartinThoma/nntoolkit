@@ -6,7 +6,6 @@ import logging
 import os
 import sys
 import tarfile
-import tempfile
 import urllib.request
 from struct import unpack
 

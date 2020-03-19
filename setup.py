@@ -20,12 +20,12 @@ setup(
     setup_requires=["numpy"],  # numpy hack
     install_requires=[
         "argparse",
-        "theano",
         "pytest",
         "natsort",
         "PyYAML",
         "h5py",
         "numpy",
         "Cython",
+        "keras",
     ],
 )

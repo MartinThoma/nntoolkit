@@ -5,4 +5,5 @@ Sphinx
 coverage
 future
 h5py
-theano
+tensorflow
+keras

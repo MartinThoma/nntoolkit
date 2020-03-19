@@ -3,9 +3,6 @@
 
 """Test a neural network."""
 
-# Core Library modules
-import logging
-
 # Third party modules
 import numpy
 
@@ -14,15 +11,16 @@ import nntoolkit.evaluate as evaluate
 import nntoolkit.utils as utils
 
 
-def main(model_file, test_data, verbose=True):
-    """ Evaluate a model
+def main(model_file: str, test_data: str, verbose=True) -> float:
+    """
+    Evaluate a model
 
     Parameters
     ----------
-    model_file : string
+    model_file : str
         Path to a model file
-    test_data : string
-        Path to a testdata.tar file
+    test_data : str
+        Path to a testdata.hdf5 file
 
     Returns
     -------
@@ -30,9 +28,6 @@ def main(model_file, test_data, verbose=True):
     """
     model = utils.get_model(model_file)
     data = utils.get_data(test_data)
-    if data is None:
-        logging.error("Data could not be loaded. Stop testing.")
-        return
     x_vec, y_vec = data
     correct = 0
     total = 0
