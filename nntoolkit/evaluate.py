@@ -5,6 +5,7 @@
 
 # Core Library modules
 import json
+import logging
 from typing import Any, Dict, List
 
 # Third party modules
@@ -12,6 +13,8 @@ import numpy as np
 
 # First party modules
 import nntoolkit.utils as utils
+
+logger = logging.getLogger(__name__)
 
 
 def show_results(results, n=10, print_results=True):
@@ -37,26 +40,60 @@ def show_results(results, n=10, print_results=True):
     return s
 
 
-def get_model_output(model: Dict[str, Any], x: np.ndarray):
+def get_model_output(model_dict: Dict[str, Any], x: np.ndarray):
     """
     Get the model output.
 
     Parameters
     ----------
-    model : Dict[str, Any]
+    model_dict : Dict[str, Any]
     x : np.ndarray
 
     Returns
     -------
     The output vector of the model
     """
-    if model["type"] == "mlp":
-        for layer in model["layers"]:
+    if model_dict["type"] == "mlp":
+        for layer in model_dict["layers"]:
             b, W, activation = layer["b"], layer["W"], layer["activation"]
             x = np.dot(x, W)
             x = activation(x + b)
         x = x[0]
+    # create_keras_model(model_dict)
     return x
+
+
+def create_keras_model(model_dict):
+    import keras
+    from keras import layers
+    import os
+
+    print(model_dict["layers"][0]["W"].shape)
+    input_dims = model_dict["layers"][0]["W"].shape[0]
+    inputs = keras.Input(shape=(input_dims,), name='features')
+    x = inputs
+    for i, layer in enumerate(model_dict["layers"]):
+        print(f"W.shape={layer['W'].shape}")
+        if i + 1 == len(model_dict["layers"]):
+            activation = 'softmax'
+        else:
+            activation = 'sigmoid'
+        x = layers.Dense(len(layer['b']), activation=activation)(x)
+
+    model = keras.Model(inputs=inputs, outputs=x, name='3_layer_mlp')
+
+    # Restore weights
+    for i, layer in enumerate(model_dict["layers"]):
+        model.layers[i+1].set_weights([layer["W"], layer["b"]])
+
+    model.compile(optimizer='adam',
+                  loss='categorical_crossentropy',
+                  metrics=['accuracy'])
+
+    filepath = os.path.abspath("model.hdf5")
+    model.save(filepath)
+    print(f"Stored keras file at: {filepath}")
+    logger.info(f"Stored keras file at: {filepath}")
 
 
 def get_results(
