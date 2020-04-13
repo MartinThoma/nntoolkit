@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # nntoolkit documentation build configuration file, created by
 # sphinx-quickstart on Wed Dec  3 08:19:40 2014.

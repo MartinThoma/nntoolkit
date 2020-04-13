@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 
 """Evaluate a neural network."""
 
@@ -24,14 +23,14 @@ def show_results(results, n=10, print_results=True):
     if len(results) == 0:
         s += "-- No results --"
     else:
-        s += "{0:18s} {1:7s}\n".format("Class", "Prob")
+        s += "{:18s} {:7s}\n".format("Class", "Prob")
         s += "#" * 50 + "\n"
         for entry in results:
             if n == 0:
                 break
             else:
                 n -= 1
-            s += "{0:18s} {1:>7.4f}%\n".format(
+            s += "{:18s} {:>7.4f}%\n".format(
                 entry["semantics"], entry["probability"] * 100
             )
         s += "#" * 50
@@ -70,25 +69,25 @@ def create_keras_model(model_dict):
 
     print(model_dict["layers"][0]["W"].shape)
     input_dims = model_dict["layers"][0]["W"].shape[0]
-    inputs = keras.Input(shape=(input_dims,), name='features')
+    inputs = keras.Input(shape=(input_dims,), name="features")
     x = inputs
     for i, layer in enumerate(model_dict["layers"]):
         print(f"W.shape={layer['W'].shape}")
         if i + 1 == len(model_dict["layers"]):
-            activation = 'softmax'
+            activation = "softmax"
         else:
-            activation = 'sigmoid'
-        x = layers.Dense(len(layer['b']), activation=activation)(x)
+            activation = "sigmoid"
+        x = layers.Dense(len(layer["b"]), activation=activation)(x)
 
-    model = keras.Model(inputs=inputs, outputs=x, name='3_layer_mlp')
+    model = keras.Model(inputs=inputs, outputs=x, name="3_layer_mlp")
 
     # Restore weights
     for i, layer in enumerate(model_dict["layers"]):
-        model.layers[i+1].set_weights([layer["W"], layer["b"]])
+        model.layers[i + 1].set_weights([layer["W"], layer["b"]])
 
-    model.compile(optimizer='adam',
-                  loss='categorical_crossentropy',
-                  metrics=['accuracy'])
+    model.compile(
+        optimizer="adam", loss="categorical_crossentropy", metrics=["accuracy"]
+    )
 
     filepath = os.path.abspath("model.hdf5")
     model.save(filepath)

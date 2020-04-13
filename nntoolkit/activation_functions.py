@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 
 """Activation functions get applied within neural network nodes."""
 
@@ -70,7 +69,7 @@ def get_activation_function(function_name):
 # Only activation function classes follow
 # Each activation function has to implement the __str__, __repr__ and
 # __call__ functions
-class Sigmoid(object):
+class Sigmoid:
 
     """The sigmoid function :math:`f(x) = 1/(1+e^{-x})`."""
 
@@ -85,7 +84,7 @@ class Sigmoid(object):
         return sigmoid(x)
 
 
-class Softmax(object):
+class Softmax:
 
     """The softmax function."""
 
