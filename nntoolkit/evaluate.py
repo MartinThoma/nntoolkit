@@ -63,9 +63,12 @@ def get_model_output(model_dict: Dict[str, Any], x: np.ndarray):
 
 
 def create_keras_model(model_dict):
+    # Core Library modules
+    import os
+
+    # Third party modules
     import keras
     from keras import layers
-    import os
 
     print(model_dict["layers"][0]["W"].shape)
     input_dims = model_dict["layers"][0]["W"].shape[0]

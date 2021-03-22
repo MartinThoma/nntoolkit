@@ -52,6 +52,7 @@ model_option = click.option(
     type=click.Path(dir_okay=False, file_okay=True, exists=True),
 )
 def evaluate(modelfile, inputvec):
+    # First party modules
     import nntoolkit.evaluate
 
     nntoolkit.evaluate.main_bash(modelfile, inputvec)
@@ -83,6 +84,7 @@ def create():
 )
 def create_mlp(architecture, model_file):
     """Create a multi-layer Perceptron architecture."""
+    # First party modules
     import nntoolkit.create
 
     nntoolkit.create.main(
@@ -148,7 +150,9 @@ def make():
     default=0.1,
 )
 @click.option(
-    "--hook", "hook", type=str,
+    "--hook",
+    "hook",
+    type=str,
 )
 def train(
     traindata,
@@ -163,6 +167,7 @@ def train(
     hook,
 ):
     """Train a neural network."""
+    # First party modules
     import nntoolkit.train
 
     if model_file is None:
@@ -191,6 +196,7 @@ def train(
 )
 def test(model_file, test_data):
     """Test a neural network."""
+    # First party modules
     import nntoolkit.test
 
     nntoolkit.test.main(model_file, test_data)

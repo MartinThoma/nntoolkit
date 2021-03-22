@@ -10,6 +10,7 @@ class build_ext(_build_ext):
         _build_ext.finalize_options(self)
         # Prevent numpy from thinking it is still in its setup process:
         __builtins__.__NUMPY_SETUP__ = False
+        # Third party modules
         import numpy
 
         self.include_dirs.append(numpy.get_include())

@@ -101,7 +101,10 @@ def minibatch_gradient_descent(
 
     y_cat = y.reshape(-1)
     model.fit(
-        x, y_cat, epochs=epochs, batch_size=batch_size,
+        x,
+        y_cat,
+        epochs=epochs,
+        batch_size=batch_size,
     )
     return model
 
@@ -156,8 +159,9 @@ def create_mlp_from_dict(model: Dict[str, Any]):
         ]
     }
     """
+    # Third party modules
+    from keras.layers import Dense, Input
     from keras.models import Model
-    from keras.layers import Input, Dense
 
     model_input = Input(shape=(model["layers"][0]["W"]["size"][0],))
     x = model_input

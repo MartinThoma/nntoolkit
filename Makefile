@@ -1,3 +1,10 @@
+maint:
+	pip install -r requirements/dev.txt
+	pre-commit autoupdate && pre-commit run --all-files
+	pip-compile -U setup.py -o requirements/prod.txt
+	pip-compile -U requirements/ci.in
+	pip-compile -U requirements/dev.in
+
 docs:
 	python setup.py upload_docs --upload-dir docs/_build/html
 
