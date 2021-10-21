@@ -7,12 +7,12 @@
 alabaster==0.7.12
     # via sphinx
 argparse==1.4.0
-    # via -r requirements/prod.txt
+    # via -r prod.txt
 attrs==20.3.0
     # via
-    #   -r requirements/prod.txt
+    #   -r prod.txt
     #   pytest
-babel==2.9.0
+babel==2.9.1
     # via sphinx
 certifi==2020.12.5
     # via requests
@@ -23,9 +23,9 @@ coverage==5.5
     #   coveralls
     #   pytest-cov
 coveralls==3.0.1
-    # via -r requirements/ci.in
+    # via -r ci.in
 cython==0.29.22
-    # via -r requirements/prod.txt
+    # via -r prod.txt
 docopt==0.6.2
     # via coveralls
 docutils==0.16
@@ -34,7 +34,7 @@ flake8==3.9.0
     # via pytest-flake8
 h5py==3.2.1
     # via
-    #   -r requirements/prod.txt
+    #   -r prod.txt
     #   keras
 idna==2.10
     # via requests
@@ -42,12 +42,12 @@ imagesize==1.2.0
     # via sphinx
 iniconfig==1.1.1
     # via
-    #   -r requirements/prod.txt
+    #   -r prod.txt
     #   pytest
 jinja2==2.11.3
     # via sphinx
 keras==2.4.3
-    # via -r requirements/prod.txt
+    # via -r prod.txt
 markupsafe==1.1.1
     # via jinja2
 mccabe==0.6.1
@@ -55,58 +55,58 @@ mccabe==0.6.1
     #   flake8
     #   pytest-mccabe
 natsort==7.1.1
-    # via -r requirements/prod.txt
+    # via -r prod.txt
 numpy==1.20.1
     # via
-    #   -r requirements/prod.txt
+    #   -r prod.txt
     #   h5py
     #   keras
     #   scipy
 packaging==20.9
     # via
-    #   -r requirements/prod.txt
+    #   -r prod.txt
     #   pytest
     #   sphinx
 pluggy==0.13.1
     # via
-    #   -r requirements/prod.txt
+    #   -r prod.txt
     #   pytest
 py==1.10.0
     # via
-    #   -r requirements/prod.txt
+    #   -r prod.txt
     #   pytest
 pycodestyle==2.7.0
     # via flake8
 pydocstyle==6.0.0
-    # via -r requirements/ci.in
+    # via -r ci.in
 pyflakes==2.3.0
     # via flake8
 pygments==2.8.1
     # via
-    #   -r requirements/ci.in
+    #   -r ci.in
     #   sphinx
 pyparsing==2.4.7
     # via
-    #   -r requirements/prod.txt
+    #   -r prod.txt
     #   packaging
-pytest-cov==2.11.1
-    # via -r requirements/ci.in
-pytest-flake8==1.0.7
-    # via -r requirements/ci.in
-pytest-mccabe==2.0
-    # via -r requirements/ci.in
 pytest==6.2.2
     # via
-    #   -r requirements/ci.in
-    #   -r requirements/prod.txt
+    #   -r ci.in
+    #   -r prod.txt
     #   pytest-cov
     #   pytest-flake8
     #   pytest-mccabe
+pytest-cov==2.11.1
+    # via -r ci.in
+pytest-flake8==1.0.7
+    # via -r ci.in
+pytest-mccabe==2.0
+    # via -r ci.in
 pytz==2021.1
     # via babel
 pyyaml==5.4.1
     # via
-    #   -r requirements/prod.txt
+    #   -r prod.txt
     #   keras
 requests==2.25.1
     # via
@@ -114,14 +114,14 @@ requests==2.25.1
     #   sphinx
 scipy==1.6.1
     # via
-    #   -r requirements/prod.txt
+    #   -r prod.txt
     #   keras
 snowballstemmer==2.1.0
     # via
     #   pydocstyle
     #   sphinx
 sphinx==3.5.3
-    # via -r requirements/ci.in
+    # via -r ci.in
 sphinxcontrib-applehelp==1.0.2
     # via sphinx
 sphinxcontrib-devhelp==1.0.2
@@ -136,7 +136,7 @@ sphinxcontrib-serializinghtml==1.1.4
     # via sphinx
 toml==0.10.2
     # via
-    #   -r requirements/prod.txt
+    #   -r prod.txt
     #   pytest
 urllib3==1.26.4
     # via requests
