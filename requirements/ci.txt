@@ -138,7 +138,7 @@ toml==0.10.2
     # via
     #   -r prod.txt
     #   pytest
-urllib3==1.26.4
+urllib3==1.26.5
     # via requests
 
 # The following packages are considered to be unsafe in a requirements file:
