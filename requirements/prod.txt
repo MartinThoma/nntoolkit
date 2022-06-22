@@ -20,7 +20,7 @@ keras==2.4.3
     # via nntoolkit (setup.py)
 natsort==7.1.1
     # via nntoolkit (setup.py)
-numpy==1.20.1
+numpy==1.22.0
     # via
     #   h5py
     #   keras
